@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PIFL Driver Load Tracker</title>
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0;background:#f4f6f9;color:#1b2430}
+header{background:#1f3a5f;color:#fff;padding:16px 20px}header h1{margin:0;font-size:1.3rem}header p{margin:4px 0 0;opacity:.85;font-size:.9rem}
+main{padding:16px;max-width:1200px;margin:auto}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+select,a.btn{font-size:1rem;padding:8px 12px;border-radius:8px;border:1px solid #c5cdd8;background:#fff;color:#1b2430;text-decoration:none}
+a.btn{background:#1f3a5f;color:#fff;border-color:#1f3a5f}
+.legend{font-size:.85rem}.legend span{background:#f8d7da;color:#9c0006;font-weight:700;padding:2px 8px;border-radius:4px}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+th,td{padding:8px 10px;border-bottom:1px solid #e3e7ee;text-align:left;font-size:.9rem;vertical-align:top}
+th{background:#1f3a5f;color:#fff;position:sticky;top:0}
+tr.hot td{background:#f8d7da;color:#9c0006;font-weight:600}
+.note{font-size:.8rem;color:#5a6676;margin-top:12px}
+@media(max-width:760px){table,thead,tbody,tr,td{display:block}thead{display:none}tr{margin-bottom:12px;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+td{border:none;border-bottom:1px solid #eef1f5;background:#fff}td::before{content:attr(data-label);display:block;font-size:.72rem;text-transform:uppercase;color:#5a6676;font-weight:600}tr.hot td::before{color:#9c0006}}
+</style></head><body>
+<header><h1>Pay It Forward Logistics: Driver Load Tracker</h1><p>Load notes organizer for the drivers app</p></header>
+<main>
+<div class="bar"><label>Trailer type: <select id="f"><option value="">All</option><option>Dry Van</option><option>Reefer</option><option>Flatbed</option><option>Step Deck</option><option>Other</option></select></label>
+<a class="btn" href="PIFL_Driver_Load_Tracker.xlsx" download>Download the Excel tracker</a>
+<span class="legend"><span>Red row</span> = Hot Load</span></div>
+<table><thead><tr id="h"></tr></thead><tbody id="b"></tbody></table>
+<p class="note">Rows shown are sample data only. See the <a href="https://github.com/sophiamunkeboe/pifl-driver-load-tracker#readme">README</a> for the field structure.</p>
+</main>
+<script>
+const D={"headers": ["Load ID", "Customer Name", "Trailer Type", "Pickup City/State", "Pickup Date & Time", "Load Size / Weight / Details", "Hot Load?", "Delivery City/State", "Delivery Date & Time", "Miles", "Notes"], "rows": [["SAMPLE-0001-FTL-HOT", "Sample Customer A", "Reefer", "Phoenix, AZ", "2026-11-02 06:00", "FTL, 42,000 lb, produce, keep at 34\u00b0F", "Yes", "Los Angeles, CA", "2026-11-02 14:00", 372, "Sample row: hot load, call on arrival"], ["SAMPLE-0002-LTL", "Sample Customer B", "Dry Van", "Tucson, AZ", "2026-11-03 08:00", "LTL, 8 pallets, 12,500 lb", "No", "El Paso, TX", "2026-11-03 16:00", 320, "Sample row"], ["SAMPLE-0003-FTL", "Sample Customer C", "Flatbed", "Flagstaff, AZ", "2026-11-04 07:30", "FTL, 46,000 lb, steel beams, tarps required", "No", "Albuquerque, NM", "2026-11-04 15:00", 325, "Sample row: straps and tarps"]], "trailers": ["Dry Van", "Reefer", "Flatbed", "Step Deck", "Other"]};
+const h=document.getElementById("h"),b=document.getElementById("b"),f=document.getElementById("f");
+D.headers.forEach(x=>{const th=document.createElement("th");th.textContent=x;h.appendChild(th)});
+function draw(){b.innerHTML="";D.rows.filter(r=>!f.value||r[2]===f.value).forEach(r=>{const tr=document.createElement("tr");if(r[6]==="Yes")tr.className="hot";
+r.forEach((v,i)=>{const td=document.createElement("td");td.dataset.label=D.headers[i];td.textContent=(i===6&&v==="Yes")?"🔥 Yes":v;tr.appendChild(td)});b.appendChild(tr)});
+if(!b.children.length)b.innerHTML='<tr><td colspan="11">No loads for this trailer type.</td></tr>'}
+f.onchange=draw;draw();
+</script></body></html>
