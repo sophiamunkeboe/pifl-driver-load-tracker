@@ -157,7 +157,8 @@ function clock(l,kind){if(kind==="carrier"){const due=l.docs==null?null:l.docs+3
  const due=l.inv==null?null:l.inv+30;return{start:l.inv,due,paid:l.inv_status==="Invoice Paid",status:l.inv_status}}
 function left(c){if(c.due==null||c.paid)return{txt:c.paid?"Paid":"Clock not started",cls:c.paid?"ok":"muted"};
  const n=c.due;return n<0?{txt:`${-n} day${n===-1?"":"s"} overdue`,cls:"over"}:{txt:n===0?"Due today":`${n} days left`,cls:"ok"}}
-function detail(id){const l=LOADS.find(x=>x.id===id),st=stopsOf(id),m=l.cust_rate-l.truck_rate;let ri=0;
+function detail(id){openPanel(()=>renderDetail(id))}
+function renderDetail(id){const l=LOADS.find(x=>x.id===id),st=stopsOf(id),m=l.cust_rate-l.truck_rate;let ri=0;
  const cc=clock(l,"carrier"),cu=clock(l,"cust"),a=left(cc),b=left(cu);
  $("panel").className="panel "+(l.hot==="Yes"?"hot":"");
  $("panel").innerHTML=`<button class="x" aria-label="Close">×</button><h2>${l.hot==="Yes"?"🔥 ":""}${l.id}</h2>
@@ -168,9 +169,18 @@ function detail(id){const l=LOADS.find(x=>x.id===id),st=stopsOf(id),m=l.cust_rat
  <h3 style="margin:14px 0 6px">Pay clocks</h3><div class="grid">${kv("Carrier: "+cc.status,cc.start==null?"Waiting on BOL / docs":"Docs "+fD(dOff(cc.start))+" · due "+fD(dOff(cc.due)))}${kv("Carrier clock",`<span style="${a.cls==="over"?"color:#c00000;font-weight:700":""}">${a.txt}</span>`)}
  ${kv("Customer: "+cu.status,cu.start==null?"Not invoiced yet":"Invoiced "+fD(dOff(cu.start))+" · due "+fD(dOff(cu.due)))}${kv("Invoice clock",`<span style="${b.cls==="over"?"color:#c00000;font-weight:700":""}">${b.txt}</span>`)}</div>
  ${l.notes?`<h3 style="margin:14px 0 6px">Notes</h3><div>${esc(l.notes)}</div>`:""}`;
- $("ov").classList.add("show");$("panel").querySelector(".x").onclick=close}
-function close(){$("ov").classList.remove("show")}
-$("ov").onclick=e=>{if(e.target.id==="ov")close()};document.onkeydown=e=>{if(e.key==="Escape")close()};
+ $("panel").querySelector(".x").onclick=close}
+/* Panel stack: day list -> load detail. × / Esc / backdrop / phone back each step back one level,
+   restoring the previous panel and its scroll position. Each open panel owns one history entry. */
+const pstack=[];
+function showTop(){const top=pstack[pstack.length-1];if(!top){$("ov").classList.remove("show");return}
+ top.render();$("ov").classList.add("show");$("ov").scrollTop=top.scroll||0}
+function openPanel(render){if(pstack.length)pstack[pstack.length-1].scroll=$("ov").scrollTop;
+ pstack.push({render,scroll:0});history.pushState({pifl:pstack.length},"");showTop()}
+function popPanel(){pstack.pop();showTop()}
+function close(){if(!pstack.length)return;if(history.state&&history.state.pifl===pstack.length)history.back();else popPanel()}
+addEventListener("popstate",()=>{const n=(history.state&&history.state.pifl)||0;if(n<pstack.length){while(pstack.length>n)pstack.pop();showTop()}});
+$("ov").onclick=e=>{if(e.target.id==="ov")close()};document.onkeydown=e=>{if(e.key==="Escape"&&pstack.length){e.preventDefault();close()}};
 const sc=s=>s.replace(/\s/g,"");
 function row(l,kind){const c=clock(l,kind),x=left(c);
  const who=kind==="carrier"?esc(l.carrier)||"—":`${esc(l.customer)}<br><small>Ref ${esc(l.ref)}</small>`;
@@ -218,11 +228,12 @@ function drawCal(){const m=byDay(),c=$("cal");$("vM").classList.toggle("on",calV
    <div class="wlist">${L.map(evHTML).join("")||'<div class="wempty">No stops</div>'}</div></div>`}
   c.innerHTML=`<div class="wgrid">${g}</div>`;{const w=c.firstChild,t=w.querySelector(".wcol.today");if(t&&w.scrollWidth>w.clientWidth)w.scrollLeft=t.offsetLeft-w.offsetLeft-6}c.querySelectorAll(".ev").forEach(x=>x.onclick=()=>detail(x.dataset.id))}
  sizeCal()}
-function dayList(d,L){const s=dayState(L,d);$("panel").className="panel";
+function dayList(d,L){openPanel(()=>renderDayList(d,L))}
+function renderDayList(d,L){const s=dayState(L,d);$("panel").className="panel";
  $("panel").innerHTML=`<button class="x" aria-label="Close">×</button><h2>${d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})}</h2>
  <div style="color:var(--sd);margin-bottom:8px">${s.pu} pickup${s.pu===1?"":"s"} · ${s.del} drop-off${s.del===1?"":"s"}${s.all?' · <b style="color:var(--g)">✓ Done</b>':s.n?` · ${s.dn}/${s.n} done`:""}${s.late?' · <b style="color:var(--red)">unfinished</b>':""}</div>
  ${L.map(evHTML).join("")||'<div class="wempty">No pickups or drop-offs this day.</div>'}`;
- $("ov").classList.add("show");$("panel").querySelector(".x").onclick=close;$("panel").querySelectorAll(".ev").forEach(x=>x.onclick=()=>detail(x.dataset.id))}
+ $("panel").querySelector(".x").onclick=close;$("panel").querySelectorAll(".ev").forEach(x=>x.onclick=()=>detail(x.dataset.id))}
 function calMove(n){if(calView==="m")calCur=new Date(calCur.getFullYear(),calCur.getMonth()+n,1);else calCur.setDate(calCur.getDate()+7*n);drawCal()}
 $("cPrev").onclick=()=>calMove(-1);$("cNext").onclick=()=>calMove(1);$("cToday").onclick=()=>{calCur=new Date(T0);drawCal()};
 $("vM").onclick=()=>{calView="m";drawCal()};$("vW").onclick=()=>{calView="w";drawCal()};addEventListener("resize",sizeCal);
