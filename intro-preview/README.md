@@ -4,7 +4,7 @@ This folder is staged on the `intro-preview` branch only. `main` and the live tr
 
 - `index.html` is the tracker with the intro inlined. It plays the intro, then fades into the app. Its asset links point at `../`.
 - `pifl-intro.js` is the same intro as a standalone file, for reading or reuse. It uses no libraries, just canvas and CSS.
-- The logo is `../assets/pifl-shield-512.png`, a transparent shield cut from the brand logo.
+- The logo is a transparent shield cut from the brand logo, inlined in the script as a PNG data URI (360px, 8-bit with alpha) so it never depends on a separate file. It has no CSS filters on it; an external PNG plus animated blur/drop-shadow filters showed up as a white square in iPhone Safari.
 
 ## Timeline (about 8 s)
 
