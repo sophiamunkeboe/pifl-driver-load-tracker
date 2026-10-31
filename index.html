@@ -91,13 +91,221 @@ main.full{max-width:none}
  .acct tr{margin-bottom:10px;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.1);background:#fff}
  .acct td{border-bottom:1px solid #eef1f5}.acct td::before{content:attr(data-l);display:block;font-size:.68rem;text-transform:uppercase;color:#5a6676;font-weight:600}
  .acct td.over::before{color:#fde}}
+[hidden]{display:none!important}nav{overflow-x:auto;scrollbar-width:none}nav button{white-space:nowrap;position:relative}
+.nbadge{background:#D93B30;color:#fff;font-size:.68rem;font-weight:800;border-radius:9px;padding:1px 6px;margin-left:5px;vertical-align:2px}
+.btn.ghost{background:#fff;color:var(--gd);border-color:#c5cdd8}
+.dvnote{background:var(--gl);border-radius:8px;padding:6px 10px;font-size:.8rem;color:var(--gd)}
+@media(max-width:600px){nav{padding:0 2px;gap:0}nav button{padding:10px 7px;font-size:.86rem}.lg{display:none}}
+/* ---------- Driver view (phone app demo; look matches /pifl-mockups) ---------- */
+.dv{--g:#427B2F;--gd:#2f5b21;--gl:#e9f2e5;--s:#AAABAE;--gr:#808182;--r:#D93B30;--bg:#F2F3F5;--ink:#1c1d1f}
+.dvwrap{display:flex;gap:24px;align-items:flex-start;justify-content:center;flex-wrap:wrap}
+.dvside{max-width:320px;font-size:.88rem;color:#3d4a5c}.dvside h3{margin:6px 0;color:var(--g)}.dvside ol{padding-left:18px;margin:6px 0}.dvside li{margin:4px 0}
+.dv{width:390px;height:844px;border-radius:52px;border:11px solid #121314;box-shadow:0 20px 50px rgba(0,0,0,.25);position:relative;overflow:hidden;background:var(--bg);color:var(--ink);font-family:-apple-system,"SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased;flex:none}
+.dv *{box-sizing:border-box}
+.dv .sbar{height:47px;display:flex;justify-content:space-between;align-items:center;padding:12px 28px 0 34px;font-weight:600;font-size:16px}
+.dv .sbar .ic{display:flex;gap:6px;align-items:center;font-size:12px}
+.dv .bars{display:flex;gap:2px;align-items:flex-end}.dv .bars i{width:3px;background:#111;border-radius:1px;display:block}
+.dv .batt{width:25px;height:12px;border:1.5px solid #111;border-radius:3.5px;padding:1px;position:relative}.dv .batt b{display:block;height:100%;width:78%;background:#111;border-radius:1.5px}
+.dv .scr{position:absolute;left:0;right:0;top:47px;bottom:84px;overflow-y:auto;overscroll-behavior:contain;padding-bottom:16px}
+.dv .home{z-index:5;position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;background:#111;border-radius:3px}
+.dv .dnav{display:flex;align-items:center;gap:10px;padding:6px 18px 10px}
+.dv .dnav img{width:34px;height:34px;object-fit:contain;mix-blend-mode:multiply}
+.dv .dnav .t{flex:1;min-width:0;position:relative}.dv .dnav .t b{display:block;font-size:17px}.dv .dnav .t span{font-size:12px;color:var(--gr);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dv .dnav select{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer;font-size:16px}
+.dv .back{color:var(--g);font-size:30px;font-weight:300;line-height:1;margin-right:2px;background:none;border:0;cursor:pointer;padding:0 4px}
+.dv .dcard{background:#fff;border-radius:16px;margin:0 14px 10px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.dv .pill{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.2px;white-space:nowrap}
+.dv .p-g{background:var(--gl);color:var(--g)}.dv .p-r{background:#fde8e6;color:var(--r)}.dv .p-s{background:#eeeff1;color:#5e5f61}
+.dv .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.dv .lbl{font-size:11px;color:var(--gr);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.dv .dbtn{display:flex;align-items:center;justify-content:center;gap:8px;border-radius:14px;font-weight:700;font-size:16px;height:52px;width:100%;border:0;cursor:pointer;font-family:inherit}
+.dv .btn-g{background:var(--g);color:#fff}.dv .btn-o{background:#fff;color:var(--g);border:1.5px solid var(--g)}
+.dv .dbtn:disabled{cursor:default}
+.dv .chk{display:inline-flex;width:18px;height:18px;border-radius:50%;background:var(--g);color:#fff;font-size:11px;align-items:center;justify-content:center;font-weight:800;flex:none}
+.dv .chk.off{background:#fff;border:2px solid #c9cacd;color:transparent}
+.dv .dtabs{position:absolute;left:0;right:0;bottom:0;height:84px;background:rgba(255,255,255,.96);border-top:1px solid #e3e4e6;display:flex;padding-top:9px;z-index:4}
+.dv .dtabs button{flex:1;text-align:center;font-size:10px;font-weight:600;color:#9a9b9e;background:none;border:0;cursor:pointer;font-family:inherit;display:block;padding:0;height:46px;position:relative}
+.dv .dtabs i{display:block;font-style:normal;font-size:20px;margin-bottom:2px;filter:grayscale(1);opacity:.55}
+.dv .dtabs button.on{color:var(--g)}.dv .dtabs button.on i{filter:none;opacity:1}
+.dv .dtabs .dot{position:absolute;top:-2px;left:calc(50% + 6px);background:var(--r);color:#fff;font-size:9px;font-weight:800;border-radius:9px;padding:1px 5px}
+/* My Load */
+.dv .route{display:flex;gap:10px;margin-top:12px}
+.dv .dots{display:flex;flex-direction:column;align-items:center;padding-top:4px}
+.dv .dots i{width:10px;height:10px;border-radius:50%;border:2.5px solid var(--g);display:block;flex:none}
+.dv .dots .ln{width:2px;height:34px;background:var(--s);margin:3px 0}
+.dv .dots .end{background:var(--g)}
+.dv .stops{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
+.dv .dstop{display:flex;align-items:center;gap:6px;cursor:pointer;border-radius:10px;padding:2px 4px;margin:-2px -4px;min-height:40px}
+.dv .dstop:hover{background:#f6f7f8}
+.dv .dstop .tx{flex:1;min-width:0}.dv .dstop b{font-size:15px;display:block}.dv .dstop span.s{font-size:12px;color:var(--gr);display:block}
+.dv .dstop .go{color:#c4c5c8;font-size:20px}
+.dv .stbtn{height:62px;border-radius:16px;margin:0 14px 9px;display:flex;align-items:center;padding:0 18px;gap:14px;font-size:18px;font-weight:700;width:calc(100% - 28px);font-family:inherit;cursor:pointer;text-align:left}
+.dv .stbtn.done{background:#fff;color:var(--g);border:1.5px solid #cfe0c8}
+.dv .stbtn.active{background:var(--g);color:#fff;border:0;box-shadow:0 6px 16px rgba(66,123,47,.35)}
+.dv .stbtn.next{background:#fff;color:#9a9b9e;border:1.5px dashed #c9cacd}
+.dv .stbtn.next.up{color:var(--g);border-color:var(--g)}
+.dv .stbtn small{margin-left:auto;font-size:12px;font-weight:600;opacity:.85}
+.dv .ring{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex:none}
+.dv .done .ring{background:var(--g);color:#fff}.dv .active .ring{background:#fff;color:var(--g)}.dv .next .ring{border:2px solid #c9cacd}.dv .next.up .ring{border-color:var(--g)}
+.dv .bolrow{display:flex;gap:10px;margin:0 14px 10px}
+.dv .snap{flex:1;height:84px;border-radius:16px;background:#1f2a1b;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-weight:700;font-size:15px;cursor:pointer}
+.dv .snap svg{width:28px;height:28px}
+.dv .thumb{width:122px;height:84px;border-radius:16px;background:#fff;padding:6px;position:relative;box-shadow:0 1px 2px rgba(0,0,0,.08);flex:none}
+.dv .thumb img{width:100%;height:100%;object-fit:cover;border-radius:8px;transform:rotate(-3deg);border:1px solid #e4e2d8;display:block}
+.dv .thumb .none{width:100%;height:100%;border:1.5px dashed #c9cacd;border-radius:10px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;color:#9a9b9e;font-weight:600;padding:4px}
+.dv .thumb .ok{position:absolute;right:-5px;top:-6px}
+.dv .auto{margin:2px 14px 10px;background:var(--gl);border:1px solid #cfe0c8;border-radius:16px;padding:12px 14px}
+.dv .auto .h{font-size:12px;font-weight:800;color:var(--g);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.dv .auto .it{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:600;padding:4px 0}
+.dv .auto .it span:last-child{margin-left:auto;font-size:11px;color:var(--gr);font-weight:500}
+.dv .auto .it.wait{color:#9a9b9e}
+.dv .auto.tick .it .chk{animation:dvPop .4s cubic-bezier(.3,1.6,.5,1) both}.dv .auto.tick .it{animation:dvIn .4s ease-out both}
+.dv .auto.tick .it:nth-child(2),.dv .auto.tick .it:nth-child(2) .chk{animation-delay:.35s}
+.dv .auto.tick .it:nth-child(3),.dv .auto.tick .it:nth-child(3) .chk{animation-delay:.85s}
+.dv .auto.tick .it:nth-child(4),.dv .auto.tick .it:nth-child(4) .chk{animation-delay:1.35s}
+@keyframes dvPop{0%{transform:scale(0)}100%{transform:none}}
+@keyframes dvIn{0%{opacity:.25}100%{opacity:1}}
+.dv .reset{display:block;margin:6px auto 0;background:none;border:0;color:var(--gr);font-size:12px;text-decoration:underline;cursor:pointer}
+.dv .toast{position:absolute;left:14px;right:14px;bottom:96px;background:#1f2a1b;color:#fff;border-radius:14px;padding:12px 14px;font-size:13px;font-weight:600;z-index:6;opacity:0;transform:translateY(10px);transition:.25s;pointer-events:none}
+.dv .toast.show{opacity:1;transform:none}
+/* Pay */
+.dv .hero{margin:4px 14px 10px;border-radius:20px;background:linear-gradient(160deg,#4f8f39,#2f5b21);color:#fff;padding:22px 20px;position:relative;overflow:hidden}
+.dv .hero.wait{background:linear-gradient(160deg,#8b8c8f,#5e5f61)}
+.dv .hero::after{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.08)}
+.dv .big{width:54px;height:54px;border-radius:50%;background:#fff;color:var(--g);display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;margin-bottom:12px}
+.dv .hero.wait .big{color:#5e5f61;font-size:24px}
+.dv .hero .k{font-size:13px;opacity:.85;font-weight:600}
+.dv .hero .amt{font-size:40px;font-weight:800;letter-spacing:-1px;margin:2px 0 8px}
+.dv .hero .sub{font-size:13px;opacity:.9}
+.dv .tl .it{display:flex;gap:12px;position:relative;padding-bottom:16px}
+.dv .tl .it:last-child{padding-bottom:0}
+.dv .tl .it::before{content:"";position:absolute;left:11px;top:24px;bottom:0;width:2px;background:var(--g)}
+.dv .tl .it.wait::before{background:#d4d5d8}
+.dv .tl .it:last-child::before{display:none}
+.dv .tl .d{width:24px;height:24px;border-radius:50%;background:var(--g);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.dv .tl .it.wait .d{background:#fff;border:2px solid #c9cacd;color:#9a9b9e}
+.dv .tl b{font-size:15px;display:block}.dv .tl span{font-size:12px;color:var(--gr)}
+.dv .tl .tm{margin-left:auto;font-weight:700;font-size:13px;color:var(--ink);white-space:nowrap}
+.dv .cmp .bar{margin-bottom:0;flex-wrap:nowrap;height:30px;border-radius:9px;display:flex;align-items:center;padding:0 10px;font-size:12px;font-weight:700;margin-top:6px}
+.dv .cmp .us{background:var(--g);color:#fff;width:22%}
+.dv .cmp .them{background:repeating-linear-gradient(45deg,#e2e3e5,#e2e3e5 6px,#d4d5d8 6px,#d4d5d8 12px);color:#555;width:100%}
+.dv .cmp .ln{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-top:12px}
+/* Inbox */
+.dv .mail{display:flex;gap:10px;align-items:flex-start}
+.dv .av{width:38px;height:38px;border-radius:50%;background:#e9f2e5;color:var(--g);font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.dv .mail b{font-size:15px}.dv .mail .m{font-size:12px;color:var(--gr)}
+.dv .att{margin-top:10px;display:flex;align-items:center;gap:8px;background:#f5f5f6;border-radius:10px;padding:8px 10px;font-size:12px;font-weight:600}
+.dv .att .pdf{background:var(--r);color:#fff;font-size:9px;font-weight:800;border-radius:4px;padding:3px 4px}
+.dv .ai{display:flex;align-items:center;gap:8px;margin:2px 16px 8px;font-size:13px;font-weight:700;color:var(--g)}
+.dv .ai .sp{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#5fa244,#2f5b21);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px}
+.dv .f{display:flex;align-items:center;padding:7px 0;border-bottom:1px solid #f0f0f2;gap:6px}
+.dv .f:last-child{border-bottom:0}
+.dv .f .k{width:86px;font-size:12px;color:var(--gr);font-weight:600;flex:none}
+.dv .f .v{flex:1;font-size:13.5px;font-weight:650;min-width:0}
+.dv .f input{width:100%;font:650 13.5px inherit;border:1.5px solid #cfe0c8;border-radius:8px;padding:5px 7px;font-family:inherit}
+.dv .atag{font-size:10px;font-weight:700;color:var(--g);background:var(--gl);border-radius:20px;padding:2px 7px;white-space:nowrap}
+.dv .atag.ed{color:#7a5b00;background:#fff3cd}
+.dv .btns{display:flex;gap:10px;margin:2px 14px}
+.dv .okban{margin:0 14px 10px;background:var(--gl);border:1px solid #cfe0c8;border-radius:16px;padding:14px;color:var(--gd);font-weight:600}
+.dv .okban b{font-size:16px;display:block;color:var(--g);margin-bottom:2px}
+/* Stop / detention */
+.dv .map{margin:0 14px 10px;height:230px;border-radius:18px;background:#e7ece3;position:relative;overflow:hidden}
+.dv .map .blk{position:absolute;background:#f6f7f4;border-radius:6px}
+.dv .map .rd{position:absolute;background:#fff}
+.dv .geo{position:absolute;left:150px;top:58px;width:110px;height:110px;border-radius:50%;background:rgba(66,123,47,.16);border:2px dashed var(--g)}
+.dv .pin{position:absolute;left:192px;top:84px;width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--g);box-shadow:0 3px 8px rgba(0,0,0,.25)}
+.dv .pin::after{content:"";position:absolute;left:9px;top:9px;width:10px;height:10px;border-radius:50%;background:#fff}
+.dv .truck{position:absolute;left:186px;top:122px;background:#fff;border-radius:8px;padding:3px 6px;font-size:11px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.15);white-space:nowrap;transition:left .8s,top .8s}
+.dv .truck.away{left:300px;top:186px}
+.dv .gps{position:absolute;left:10px;top:10px;font-size:11px;font-weight:700;background:#fff;border-radius:20px;padding:4px 9px;color:var(--g)}
+.dv .times{display:flex;gap:10px;margin:0 14px 10px}
+.dv .t2{flex:1;background:#fff;border-radius:16px;padding:12px 14px}
+.dv .t2 .v{font-size:24px;font-weight:800;margin:2px 0}.dv .t2 .v.na{color:#c4c5c8}
+.dv .t2 .s{font-size:11px;color:var(--g);font-weight:700}
+.dv .ban{margin:0 14px 10px;border-radius:16px;background:#fff4f3;border:1.5px solid #f3b9b4;padding:14px}
+.dv .ban.okb{background:#f4f9f2;border-color:#cfe0c8}
+.dv .ban .h{color:var(--r);font-weight:800;font-size:17px}.dv .ban.okb .h{color:var(--g)}
+.dv .ban .amt{font-size:22px;font-weight:800;color:var(--r);letter-spacing:-.5px}.dv .ban.okb .amt{color:var(--g)}
+.dv .meter{height:10px;border-radius:6px;background:#eee;display:flex;overflow:hidden;margin:10px 0 6px}
+.dv .meter .free{background:var(--s)}.dv .meter .det{background:var(--r)}
+.dv .leg{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--gr);font-weight:600;gap:8px}
+.dv .foot{text-align:center;font-size:11px;color:var(--gr);margin-top:9px}
+.dv .ag h4{margin:12px 18px 6px;font-size:12px;color:var(--gr);text-transform:uppercase;letter-spacing:.5px}
+.dv .ag .ae{display:flex;gap:10px;align-items:center;cursor:pointer}
+.dv .ag .ae+.ae{border-top:1px solid #f0f0f2;margin-top:8px;padding-top:8px}
+.dv .ag .k2{font-size:10px;font-weight:800;border-radius:5px;padding:2px 5px;background:#eeeff1;color:#5e5f61;flex:none}
+.dv .ag .k2.del{background:var(--gl);color:var(--g)}
+.tag.dvtag{background:var(--gl);color:var(--gd)}
+@media(max-width:600px){
+ main.drv{padding:0}
+ .dvside{display:none}
+ .dv{width:100%;height:var(--dvh,640px);border:0;border-radius:0;box-shadow:none}
+ .dv .sbar,.dv .home{display:none}
+ .dv .scr{top:0;bottom:calc(64px + env(safe-area-inset-bottom))}
+ .dv .dtabs{height:calc(64px + env(safe-area-inset-bottom));padding-top:7px}
+ .dv .toast{bottom:76px}
+}
+/* ---------- Messages (demo only, iMessage-style, PIFL green/silver) ---------- */
+.mx{--g:#427B2F;--gl:#e9f2e5;--gr:#808182;font-family:-apple-system,"SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;color:#1c1d1f}
+.mx *{box-sizing:border-box}
+.mx .demo{font-size:11px;font-weight:700;color:#7a5b00;background:#fff3cd;border-radius:20px;padding:3px 9px;white-space:nowrap}
+.mx .th{display:flex;gap:11px;align-items:center;padding:11px 14px;cursor:pointer;border-bottom:1px solid #eeeff1;background:#fff}
+.mx .th:hover,.mx .th.on{background:#f4f8f2}
+.mx .th .av{flex:none}
+.mx .th .tx{flex:1;min-width:0}.mx .th b{font-size:15px;display:flex;justify-content:space-between;gap:6px}.mx .th b small{font-weight:500;color:var(--gr);font-size:12px}
+.mx .th .pv{font-size:13px;color:var(--gr);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mx .th.unr .pv{color:#1c1d1f;font-weight:600}
+.mx .ub{background:var(--g);color:#fff;font-size:11px;font-weight:800;border-radius:10px;min-width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px;flex:none}
+.mx .av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff;background:linear-gradient(160deg,#b9babd,#8b8c8f)}
+.mx .av.grp{background:linear-gradient(160deg,#5fa244,#2f5b21)}.mx .av.sm{width:26px;height:26px;font-size:10px}
+.mx .chat{display:flex;flex-direction:column;height:100%;background:#fff;min-height:0}
+.mx .ch{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid #eeeff1;background:rgba(248,249,248,.97)}
+.mx .ch .tx{flex:1;min-width:0}.mx .ch b{display:block;font-size:15px}.mx .ch .tx span{font-size:11.5px;color:var(--gr);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mx .ch .bk{background:none;border:0;color:var(--g);font-size:30px;line-height:1;cursor:pointer;padding:0 4px;font-weight:300}
+.mx .ms{flex:1;overflow-y:auto;padding:10px 12px 6px;display:flex;flex-direction:column;gap:3px;min-height:0;overscroll-behavior:contain}
+.mx .row{display:flex;align-items:flex-end;justify-content:flex-start;gap:6px;max-width:82%}
+.mx .row.me{align-self:flex-end;flex-direction:row-reverse}
+.mx .who{font-size:11px;color:var(--gr);margin:6px 0 1px 38px}
+.mx .bb{padding:8px 12px;border-radius:19px;font-size:15px;line-height:1.3;background:#e9e9eb;color:#111;word-wrap:break-word;min-width:0}
+.mx .me .bb{background:var(--g);color:#fff}
+.mx .bb.ph{padding:4px;background:#e9e9eb;overflow:hidden}.mx .me .bb.ph{background:var(--g)}
+.mx .bb.ph img{display:block;width:180px;height:135px;object-fit:cover;border-radius:15px}
+.mx .bb.ph div{padding:5px 8px 3px;font-size:14px}
+.mx .lc{border-radius:16px;border:1.5px solid #cfe0c8;background:#fff;padding:10px 12px;cursor:pointer;width:220px;color:#1c1d1f}
+.mx .lc:hover{box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.mx .lc .h{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:15px}
+.mx .lc .h i{font-style:normal;font-size:10px;font-weight:800;color:#fff;background:#D93B30;border-radius:20px;padding:2px 7px}
+.mx .lc .r{font-size:12.5px;color:var(--gr);margin-top:3px}.mx .lc .st{margin-top:7px;font-size:12px;font-weight:700;color:var(--g)}
+.mx .lc .op{margin-top:6px;font-size:12px;font-weight:700;color:var(--g);border-top:1px solid #eef2ec;padding-top:6px}
+.mx .sys{align-self:center;font-size:12px;color:#2f5b21;background:var(--gl);border-radius:12px;padding:5px 11px;margin:6px 0;font-weight:600;text-align:center}
+.mx .sys small{color:var(--gr);font-weight:500}
+.mx .note{align-self:flex-end;font-size:10.5px;color:#9a6b00;margin:1px 4px 4px}
+.mx .ts{font-size:10.5px;color:#a0a1a4;margin:1px 6px 2px}.mx .me+.ts{align-self:flex-end}
+.mx .cmp{display:flex;gap:8px;align-items:center;padding:8px 10px;border-top:1px solid #eeeff1;background:#fafafa}
+.mx .cmp input{flex:1;border:1px solid #d4d5d8;border-radius:20px;padding:9px 14px;font-size:16px;font-family:inherit;outline:none;min-width:0}
+.mx .cmp input:focus{border-color:var(--g)}
+.mx .cmp button{width:34px;height:34px;border-radius:50%;background:var(--g);color:#fff;border:0;font-size:18px;font-weight:800;cursor:pointer;flex:none}
+.mx .cmp button:disabled{background:#c9cacd}
+.mx .hint{font-size:10.5px;color:var(--gr);text-align:center;padding:0 10px 6px;background:#fafafa}
+/* broker tab layout */
+.mxb{display:grid;grid-template-columns:320px 1fr;height:var(--mh,620px);border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.12);background:#fff}
+.mxb .list{border-right:1px solid #eeeff1;overflow-y:auto;background:#fff}
+.mxb .lh{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 8px;font-weight:800;font-size:20px}
+.mxb .chat .bk{display:none}
+@media(max-width:700px){.mxb{grid-template-columns:1fr}.mxb.open .list{display:none}.mxb:not(.open) .chat{display:none}.mxb .chat .bk{display:block}}
+/* driver view: chat fills the phone screen */
+.dv .scr.chatmode{overflow:hidden;padding-bottom:0}
+.dv .scr.chatmode .mx{height:100%}
+
 </style></head><body>
 <header><img src="assets/pifl-logo.jpg" alt="Pay It Forward Logistics, LLC" width="120" height="64"><div><h1>Load Tracker</h1><p>Load board, load details and the 30-day pay clocks · sample data only</p></div></header>
-<nav><button id="tBoard" class="on">Load Board</button><button id="tCal">Calendar</button><button id="tAcct">Accounting</button></nav>
+<nav><button id="tBoard" class="on"><span class="lg">Load </span>Board</button><button id="tCal">Calendar</button><button id="tAcct">Accounting</button><button id="tMsg">Messages<span class="nbadge" id="tMsgN" hidden></span></button><button id="tDrv">🚛 Driver<span class="lg"> view</span></button></nav>
 <main>
 <div class="bar">
  <label>Trailer type: <select id="fTrailer"><option value="">All</option></select></label>
  <a class="btn" href="PIFL_Driver_Load_Tracker.xlsx" download>Download Excel tracker</a>
+ <button class="btn ghost" id="bReset" hidden title="Clear driver-app taps, BOL photos, detention, messages and the confirmed rate con">Reset demo</button>
+ <span class="dvnote" id="dvNote" hidden>Includes changes made in the Driver view demo</span>
 </div>
 <section id="vBoard">
  <div class="chips" id="fStatus" style="margin-bottom:8px"></div>
@@ -119,11 +327,24 @@ main.full{max-width:none}
  <p class="help">The clock starts on the invoice date. Customer due = invoice date + 30 days. Red = past due and not paid.</p>
  <table><thead><tr><th>Load</th><th>Customer · Ref #</th><th>Customer rate</th><th>Invoiced</th><th>Due</th><th>Days left</th><th>Status</th></tr></thead><tbody id="custT"></tbody></table>
 </section>
+<section id="vMsg" hidden><div id="mxBox" class="mx mxb"></div></section>
+<section id="vDrv" hidden><div class="dvwrap">
+ <div class="dv"><div class="sbar"><span id="dvClock">9:41</span><span class="ic"><span class="bars"><i style="height:4px"></i><i style="height:6px"></i><i style="height:8px"></i><i style="height:10px"></i></span>5G<span class="batt"><b></b></span></span></div>
+  <div class="scr" id="dvScr"></div><div class="toast" role="status"></div>
+  <div class="dtabs"><button data-t="load" class="on"><i>🚛</i>My Load</button><button data-t="inbox"><i>📥</i>Inbox<span class="dot">1</span></button><button data-t="cal"><i>📅</i>Calendar</button><button data-t="pay"><i>💵</i>Pay</button><button data-t="msg"><i>💬</i>Messages<span class="dot" hidden></span></button></div><div class="home"></div></div>
+ <div class="dvside"><h3>Driver view (demo)</h3><p>The driver's phone app. Everything runs in this browser and is saved on this device only. Sample data, nothing is sent.</p>
+ <ol><li><b>My Load:</b> tap Loaded → En Route → Delivered. The Load Board and Calendar move with it.</li><li><b>Snap BOL:</b> take or pick a photo. The pay clock, invoice and shipper notice tick in.</li>
+ <li><b>Pay:</b> delivered + BOL = paid the same day.</li><li><b>Inbox:</b> the assistant read a rate con. Confirm it to add the load to the board.</li>
+ <li><b>Stops:</b> tap a stop for GPS arrival/departure, the free-time bar and Bill detention.</li><li><b>Messages:</b> demo chats; status taps post here.</li></ol>
+ <p><button class="btn ghost" data-a="reset" id="bReset2">Reset demo</button></p></div></div></section>
 <p class="note">All companies, numbers and dates are made up. Sample dates are set relative to today so the clocks always show a mix of open and overdue items. See the <a href="https://github.com/sophiamunkeboe/pifl-driver-load-tracker#readme">README</a> for the data model.</p>
 </main>
 <div class="ov" id="ov"><div class="panel" id="panel"></div></div>
 <script>
 const LOADS=[{"id": "PIFL-1001", "customer": "Saguaro Home Supply (sample)", "ref": "SHS-77120", "trailer": "Dry Van", "loadtype": "Truckload", "hot": "No", "status": "Available", "miles": 389, "carrier": "", "cust_rate": 1650, "truck_rate": 1350, "docs": null, "carrier_status": "Docs Pending", "carrier_paid": null, "inv": null, "inv_status": "Not Invoiced", "inv_paid": null, "notes": "Sample: needs a carrier. 53' dry van, no team needed."}, {"id": "PIFL-1002", "customer": "Valley Fresh Produce (sample)", "ref": "VFP-4471", "trailer": "Reefer", "loadtype": "Truckload", "hot": "Yes", "status": "Loading", "miles": 372, "carrier": "Red Rock Carriers (sample)", "cust_rate": 2400, "truck_rate": 1950, "docs": null, "carrier_status": "Docs Pending", "carrier_paid": null, "inv": null, "inv_status": "Not Invoiced", "inv_paid": null, "notes": "Sample: HOT. Keep at 34°F, continuous. Call dispatch on any delay."}, {"id": "PIFL-1003", "customer": "Copper State Steel (sample)", "ref": "CSS-PO-90215", "trailer": "Flatbed", "loadtype": "Partial", "hot": "No", "status": "Loaded / En Route", "miles": 455, "carrier": "Mesa Flatbed LLC (sample)", "cust_rate": 2100, "truck_rate": 1700, "docs": null, "carrier_status": "Docs Pending", "carrier_paid": null, "inv": null, "inv_status": "Not Invoiced", "inv_paid": null, "notes": "Sample: two drops. Tarps and 8 straps required."}, {"id": "PIFL-1004", "customer": "Sonoran Builders Co. (sample)", "ref": "SBC-3308", "trailer": "Step Deck", "loadtype": "Truckload", "hot": "No", "status": "Unloading", "miles": 298, "carrier": "Ironwood Haulers (sample)", "cust_rate": 1900, "truck_rate": 1525, "docs": null, "carrier_status": "Docs Pending", "carrier_paid": null, "inv": null, "inv_status": "Not Invoiced", "inv_paid": null, "notes": "Sample: receiver unloads with forklift; get signed BOL before leaving."}, {"id": "PIFL-1005", "customer": "Grand Canyon Beverage (sample)", "ref": "GCB-11872", "trailer": "Dry Van", "loadtype": "Partial", "hot": "Yes", "status": "Delivered", "miles": 410, "carrier": "Red Rock Carriers (sample)", "cust_rate": 1800, "truck_rate": 1500, "docs": -32, "carrier_status": "Docs Received", "carrier_paid": null, "inv": -31, "inv_status": "Invoiced", "inv_paid": null, "notes": "Sample: delivered on time. Both clocks are past 30 days, so they show overdue."}, {"id": "PIFL-1006", "customer": "Desert Bloom Nursery (sample)", "ref": "DBN-2290", "trailer": "Reefer", "loadtype": "Truckload", "hot": "No", "status": "Delivered", "miles": 360, "carrier": "Mesa Flatbed LLC (sample)", "cust_rate": 2250, "truck_rate": 1800, "docs": -7, "carrier_status": "Paid", "carrier_paid": -2, "inv": -7, "inv_status": "Invoiced", "inv_paid": null, "notes": "Sample: carrier took quick pay; customer invoice is still inside its 30 days."}], STOPS=[{"load": "PIFL-1001", "type": "Pickup", "name": "Saguaro Home Supply DC (sample)", "city": "Phoenix, AZ", "day": 1, "time": "07:00", "po": "PO-55101", "release": "REL-8812", "desc": "Boxed fixtures on 22 pallets", "loadtype": "Truckload", "pieces": 22, "weight": 38500}, {"load": "PIFL-1001", "type": "Receiver", "name": "Pueblo Hardware Warehouse (sample)", "city": "Albuquerque, NM", "day": 2, "time": "13:00", "po": "PO-55101-R", "release": "", "desc": "Boxed fixtures on 22 pallets", "loadtype": "Truckload", "pieces": 22, "weight": 38500}, {"load": "PIFL-1002", "type": "Pickup", "name": "Valley Fresh Packing Shed (sample)", "city": "Yuma, AZ", "day": 0, "time": "05:30", "po": "PO-VF-3381", "release": "PU-20419", "desc": "Leaf lettuce, 24 pallets", "loadtype": "Truckload", "pieces": 24, "weight": 41000}, {"load": "PIFL-1002", "type": "Receiver", "name": "Coastline Grocers DC (sample)", "city": "Los Angeles, CA", "day": 0, "time": "14:00", "po": "CG-778120", "release": "", "desc": "Leaf lettuce, 24 pallets", "loadtype": "Truckload", "pieces": 24, "weight": 41000}, {"load": "PIFL-1003", "type": "Pickup", "name": "Copper State Steel Yard (sample)", "city": "Tolleson, AZ", "day": -1, "time": "08:00", "po": "PO-90215", "release": "REL-4410", "desc": "Steel beams and plate", "loadtype": "Partial", "pieces": 18, "weight": 30000}, {"load": "PIFL-1003", "type": "Receiver", "name": "Rio Fab Works (sample)", "city": "Tucson, AZ", "day": 0, "time": "10:00", "po": "RF-1102", "release": "", "desc": "Steel beams", "loadtype": "Partial", "pieces": 10, "weight": 17500}, {"load": "PIFL-1003", "type": "Receiver", "name": "Border Iron Supply (sample)", "city": "El Paso, TX", "day": 1, "time": "09:00", "po": "BIS-6650", "release": "", "desc": "Steel plate", "loadtype": "Partial", "pieces": 8, "weight": 12500}, {"load": "PIFL-1004", "type": "Pickup", "name": "Sonoran Builders Yard (sample)", "city": "Flagstaff, AZ", "day": -2, "time": "06:30", "po": "PO-SBC-3308", "release": "PU-7781", "desc": "Roof trusses, bundled", "loadtype": "Truckload", "pieces": 12, "weight": 36000}, {"load": "PIFL-1004", "type": "Receiver", "name": "Mesa Ridge Jobsite (sample)", "city": "Mesa, AZ", "day": -1, "time": "15:00", "po": "MR-2201", "release": "", "desc": "Roof trusses, bundled", "loadtype": "Truckload", "pieces": 12, "weight": 36000}, {"load": "PIFL-1005", "type": "Pickup", "name": "Grand Canyon Bottling (sample)", "city": "Flagstaff, AZ", "day": -34, "time": "06:00", "po": "PO-GCB-11872", "release": "REL-3302", "desc": "Canned beverages", "loadtype": "Partial", "pieces": 14, "weight": 24000}, {"load": "PIFL-1005", "type": "Receiver", "name": "Kingman Market (sample)", "city": "Kingman, AZ", "day": -34, "time": "11:00", "po": "KM-4410", "release": "", "desc": "Canned beverages", "loadtype": "Partial", "pieces": 6, "weight": 10000}, {"load": "PIFL-1005", "type": "Receiver", "name": "Lake Havasu Foods (sample)", "city": "Lake Havasu City, AZ", "day": -33, "time": "08:00", "po": "LHF-0921", "release": "", "desc": "Canned beverages", "loadtype": "Partial", "pieces": 8, "weight": 14000}, {"load": "PIFL-1006", "type": "Pickup", "name": "Desert Bloom Greenhouse (sample)", "city": "Chandler, AZ", "day": -9, "time": "05:00", "po": "PO-DBN-2290", "release": "PU-5520", "desc": "Potted plants, 26 pallets", "loadtype": "Truckload", "pieces": 26, "weight": 34000}, {"load": "PIFL-1006", "type": "Receiver", "name": "Garden Plaza DC (sample)", "city": "Las Vegas, NV", "day": -8, "time": "12:00", "po": "GP-88013", "release": "", "desc": "Potted plants, 26 pallets", "loadtype": "Truckload", "pieces": 26, "weight": 34000}], TRAILERS=["Dry Van", "Reefer", "Flatbed", "Step Deck", "Other"], STATUSES=["Available", "Loading", "Loaded / En Route", "Unloading", "Delivered"];
+/* Demo state: driver-app taps, BOL photos, detention, the confirmed rate con and messages are kept in localStorage only. */
+const SKEY="pifl-demo-v1";let DEMO={ev:{},bol:{},det:{"PIFL-1003|0":{arr:"08:02",dep:"11:17"}},dLoad:"PIFL-1002"},DIRTY=false;
+try{const sv=JSON.parse(localStorage.getItem(SKEY)||"null");if(sv&&sv.v===1){LOADS.splice(0,LOADS.length,...sv.loads);STOPS.splice(0,STOPS.length,...sv.stops);DEMO=sv.demo;DIRTY=true}}catch(e){}
 const DAY=864e5, T0=new Date();T0.setHours(0,0,0,0);
 const dOff=o=>o==null?null:new Date(T0.getTime()+o*DAY);
 const fD=d=>d?d.toLocaleDateString("en-US",{weekday:"short",month:"numeric",day:"numeric"}):"—";
@@ -147,7 +368,7 @@ function card(l){const st=stopsOf(l.id),pu=st.find(s=>s.type==="Pickup"),rc=st.f
  <div class="cust">${esc(l.customer)} · Ref ${esc(l.ref)}</div>
  <div class="lane">${esc(pu?.city)} → ${rc.map(r=>esc(r.city)).join(" → ")}</div>
  <div class="lane" style="color:#5a6676">PU ${pu?fDT(pu.day,pu.time):"—"}</div>
- <div class="meta"><span class="tag">${l.trailer}</span><span class="tag">${l.loadtype}</span><span class="tag">${l.miles} mi</span>${rc.length>1?`<span class="tag">${rc.length} drops</span>`:""}${l.hot==="Yes"?'<span class="tag hot">HOT</span>':""}</div></div>`}
+ <div class="meta"><span class="tag">${l.trailer}</span><span class="tag">${l.loadtype}</span><span class="tag">${l.miles} mi</span>${rc.length>1?`<span class="tag">${rc.length} drops</span>`:""}${l.hot==="Yes"?'<span class="tag hot">HOT</span>':""}${drvTags(l)}</div></div>`}
 function kv(k,v){return `<div class="kv"><b>${k}</b>${v}</div>`}
 function stopHTML(s,i){const pu=s.type==="Pickup";
  return `<div class="stop ${pu?"pu":"rc"}"><h4>${pu?"Pickup (shipper)":"Receiver "+i} · ${esc(s.name)}</h4>
@@ -168,7 +389,7 @@ function renderDetail(id){const l=LOADS.find(x=>x.id===id),st=stopsOf(id),m=l.cu
  <h3 style="margin:14px 0 6px">Rates</h3><div class="money">${kv("Customer rate (bill)",money(l.cust_rate))}${kv("Truck rate (pay)",money(l.truck_rate))}<div class="kv m"><b>Margin $</b>${money(m)}</div><div class="kv m"><b>Margin %</b>${(m/l.cust_rate*100).toFixed(1)}%</div></div>
  <h3 style="margin:14px 0 6px">Pay clocks</h3><div class="grid">${kv("Carrier: "+cc.status,cc.start==null?"Waiting on BOL / docs":"Docs "+fD(dOff(cc.start))+" · due "+fD(dOff(cc.due)))}${kv("Carrier clock",`<span style="${a.cls==="over"?"color:#c00000;font-weight:700":""}">${a.txt}</span>`)}
  ${kv("Customer: "+cu.status,cu.start==null?"Not invoiced yet":"Invoiced "+fD(dOff(cu.start))+" · due "+fD(dOff(cu.due)))}${kv("Invoice clock",`<span style="${b.cls==="over"?"color:#c00000;font-weight:700":""}">${b.txt}</span>`)}</div>
- ${l.notes?`<h3 style="margin:14px 0 6px">Notes</h3><div>${esc(l.notes)}</div>`:""}`;
+ ${drvDetail(l)}${l.notes?`<h3 style="margin:14px 0 6px">Notes</h3><div>${esc(l.notes)}</div>`:""}`;
  $("panel").querySelector(".x").onclick=close}
 /* Panel stack: day list -> load detail. × / Esc / backdrop / phone back each step back one level,
    restoring the previous panel and its scroll position. Each open panel owns one history entry. */
@@ -237,9 +458,258 @@ function renderDayList(d,L){const s=dayState(L,d);$("panel").className="panel";
 function calMove(n){if(calView==="m")calCur=new Date(calCur.getFullYear(),calCur.getMonth()+n,1);else calCur.setDate(calCur.getDate()+7*n);drawCal()}
 $("cPrev").onclick=()=>calMove(-1);$("cNext").onclick=()=>calMove(1);$("cToday").onclick=()=>{calCur=new Date(T0);drawCal()};
 $("vM").onclick=()=>{calView="m";drawCal()};$("vW").onclick=()=>{calView="w";drawCal()};addEventListener("resize",sizeCal);
-function draw(){drawBoard();drawAcct();drawCal()}
-function tab(t){$("vBoard").hidden=t!=="b";$("vCal").hidden=t!=="c";$("vAcct").hidden=t!=="a";$("tBoard").classList.toggle("on",t==="b");$("tCal").classList.toggle("on",t==="c");$("tAcct").classList.toggle("on",t==="a");
- document.querySelector("main").classList.toggle("full",t==="c");history.replaceState(null,"",{a:"#accounting",b:"#board",c:"#calendar"}[t]);if(t==="c")drawCal()}
-$("tBoard").onclick=()=>tab("b");$("tCal").onclick=()=>tab("c");$("tAcct").onclick=()=>tab("a");$("fTrailer").onchange=draw;
-draw();if(location.hash==="#accounting")tab("a");if(location.hash==="#calendar")tab("c");
+// ---------- Driver view: phone app demo (My Load / Inbox / Calendar / Pay + stop detention) ----------
+// All client-side. Changes write back into LOADS / STOPS, so the broker board, calendar and accounting update too.
+let dvTab="load", dvStop=null, dvRemit=false, dvToastT=0;
+const nowISO=()=>new Date().toISOString();
+const tm=iso=>iso?new Date(iso).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"}):"—";
+const evOf=id=>DEMO.ev[id]||(DEMO.ev[id]={});
+const m2t=m=>{m=((m%1440)+1440)%1440;return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0")};
+const t2m=t=>{const[h,m]=t.split(":").map(Number);return h*60+m};
+const hsh=s=>{let h=7;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h};
+const dur=m=>`${Math.floor(m/60)}h ${String(m%60).padStart(2,"0")}m`.replace(/^0h /,"");
+const FREE=120, DRATE=75;
+const myLoads=()=>LOADS.filter(l=>l.carrier);
+function curLoad(){let l=LOADS.find(x=>x.id===DEMO.dLoad&&x.carrier);if(!l){l=myLoads()[0];DEMO.dLoad=l&&l.id}return l}
+function stage(l){const e=evOf(l.id);if(l.status==="Delivered")return 3;if(l.status==="Unloading")return 2;
+ if(l.status==="Loaded / En Route")return e.loaded&&!e.enroute?1:2;return 0}
+function stopDone(l,s){return s.type==="Pickup"?SIDX(l.status)>=SIDX("Loaded / En Route"):l.status==="Delivered"}
+/* GPS detention record for a stop: real taps are stored; finished stops get a simulated GPS log */
+function detOf(l,s,i){const k=l.id+"|"+i,d=DEMO.det[k];if(d)return{k,...d};
+ if(stopDone(l,s)){const h=hsh(k),arr=t2m(s.time)+(h%26)-8;return{k,arr:m2t(arr),dep:m2t(arr+75+(h>>5)%150),sim:1}}return{k}}
+function detCalc(d,s){if(!d.arr||!d.dep)return null;let on=t2m(d.dep)-t2m(d.arr);if(on<0)on+=1440;const over=Math.max(0,on-FREE);
+ return{on,over,amt:Math.round(over/60*DRATE*100)/100,appt:fmtT(s.time)}}
+function save(){try{localStorage.setItem(SKEY,JSON.stringify({v:1,loads:LOADS,stops:STOPS,demo:DEMO}))}catch(e){}}
+function commit(msg){save();draw();if(msg)toast(msg)}
+function toast(msg){const t=document.querySelector(".dv .toast");if(!t)return;t.textContent=msg;t.classList.add("show");clearTimeout(dvToastT);dvToastT=setTimeout(()=>t.classList.remove("show"),2600)}
+function checkPay(l){const e=evOf(l.id);if(l.status==="Delivered"&&DEMO.bol[l.id]&&!e.paidAt){e.paidAt=nowISO();l.carrier_status="Paid";l.carrier_paid=0;DEMO.lastPaid=l.id;return true}return false}
+function setStage(l,n){const e=evOf(l.id),t=nowISO(),cur=stage(l);if(n<=cur)return;
+ ["loaded","enroute","delivered"].slice(0,n).forEach(k=>{if(!e[k])e[k]=t});
+ l.status=n===3?"Delivered":"Loaded / En Route";const paid=checkPay(l);
+ sysPost(`${l.id} marked ${["","Loaded","En Route","Delivered"][n]}${paid?" · carrier paid same day ✓":""}`,l.id);
+ commit(n===3?(paid?`${l.id} delivered · same-day pay sent`:`${l.id} delivered · snap the signed BOL to get paid today`):`${l.id}: ${n===1?"Loaded":"En Route"} · board and calendar updated`)}
+function onBOL(l,file){const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const c=document.createElement("canvas"),k=Math.min(1,360/Math.max(im.width,im.height));
+  c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+  const e=evOf(l.id);DEMO.bol[l.id]=c.toDataURL("image/jpeg",.72);e.bolAt=nowISO();l.docs=0;if(l.carrier_status!=="Paid")l.carrier_status="Docs Received";
+  if(l.inv==null){l.inv=0;l.inv_status="Invoiced"}DEMO.tick=l.id;const paid=checkPay(l);sysPost(`${l.id} BOL received${paid?" · carrier paid same day ✓":""}`,l.id);commit(paid?"BOL received · same-day pay sent":"BOL received · pay clock started")};
+  im.onerror=()=>toast("Couldn't read that photo. Try another image.");im.src=fr.result};fr.readAsDataURL(file)}
+const SHIELD_IMG='<img src="assets/pifl-shield.png" alt="">';
+function nav(title,sub,o={}){return `<div class="dnav">${o.back?`<button class="back" data-a="${o.back}" aria-label="Back">‹</button>`:""}${SHIELD_IMG}<div class="t"><b>${title}</b><span>${sub}</span>${o.sel||""}</div>${o.right||""}</div>`}
+function loadSelect(l){return `<select id="dvSel" aria-label="Switch load">${myLoads().map(x=>`<option value="${x.id}" ${x.id===l.id?"selected":""}>${x.id} · ${esc(x.customer)} · ${x.status}</option>`).join("")}</select>`}
+function spec(l){const t=(l.notes.match(/\d+°F/)||[])[0];return [l.trailer,t,l.loadtype].filter(Boolean).join(" · ").toUpperCase()}
+function scrLoad(){const l=curLoad();if(!l)return nav("My Load","No assigned loads")+'<div class="dcard">No loads with a carrier.</div>';
+ const st=stopsOf(l.id),e=evOf(l.id),n=stage(l),rc=st.filter(s=>s.type==="Receiver"),last=rc[rc.length-1];
+ const stops=st.map((s,i)=>{const d=detCalc(detOf(l,s,i),s),dd=DEMO.det[l.id+"|"+i];
+  return `<div class="dstop" data-stop="${i}"><div class="tx"><b>${esc(s.city)}</b><span class="s">${esc(s.name.replace(" (sample)",""))} · ${esc(s.type==="Pickup"&&s.release?s.release:s.po)} · ${fmtT(s.time)}</span></div>${d&&d.over?`<span class="pill ${dd&&dd.billed?"p-g":"p-r"}">⏱ ${money(d.amt)}</span>`:""}<span class="go">›</span></div>`}).join("");
+ const dots=st.map((s,i)=>`<i class="${i===st.length-1?"end":""}"></i>${i<st.length-1?'<div class="ln"></div>':""}`).join("");
+ const steps=[["Loaded","loaded"],["En Route","enroute"],["Delivered","delivered"]].map(([lab,k],i)=>{const idx=i+1;
+  const cls=idx<n?"done":idx===n?(n===3?"done":"active"):"next"+(idx===n+1?" up":"");
+  const small=idx<n||(idx===n&&n===3)?(e[k]?tm(e[k]):"✓"):idx===n?`Now${idx===2&&last?" · ETA "+fmtT(last.time):""}`:idx===n+1?"Tap when "+lab.toLowerCase():"";
+  const ring=cls==="done"?"✓":cls==="active"?"➜":"";
+  return `<button class="stbtn ${cls}" data-stage="${idx}"><span class="ring">${ring}</span>${lab}<small>${small}</small></button>`}).join("");
+ const bol=DEMO.bol[l.id],tick=DEMO.tick===l.id;if(tick)DEMO.tick=null;
+ const it=(ok,a,b)=>`<div class="it ${ok?"":"wait"}"><span class="chk ${ok?"":"off"}">✓</span>${a}<span>${b}</span></div>`;
+ return nav(`${l.id} ▾`,esc(l.customer),{sel:loadSelect(l),right:l.hot==="Yes"?'<span class="pill p-r">HOT</span>':""})+
+ `<div class="dcard"><div class="row"><span class="pill p-s">${spec(l)}</span><span style="font-size:12px;color:var(--gr)">${l.miles} mi</span></div>
+ <div class="route"><div class="dots">${dots}</div><div class="stops">${stops}</div></div></div>
+ <div style="padding:4px 20px 8px" class="lbl">Tap to update status</div>${steps}
+ <div class="bolrow"><label class="snap" for="dvBol"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>${bol?"Retake BOL":"Snap BOL"}</label>
+ <input type="file" id="dvBol" accept="image/*" capture="environment" hidden>
+ <div class="thumb">${bol?`<img src="${bol}" alt="BOL photo"><span class="chk ok">✓</span>`:'<div class="none">No BOL yet<br>signed POD</div>'}</div></div>
+ <div class="auto ${tick?"tick":""}"><div class="h">⚡ What happens automatically</div>
+ ${it(!!bol,"Shipper notified","text + email")}${it(!!bol,"30-day pay clock started",bol?"BOL "+tm(e.bolAt):"waits for BOL")}${it(!!bol,"Invoice drafted",money(l.cust_rate))}
+ ${l.status==="Delivered"?it(!!e.paidAt,"Carrier paid same day",e.paidAt?money(l.truck_rate)+" · "+tm(e.paidAt):"delivered + BOL"):""}</div>
+ <button class="reset" data-a="reset">Reset demo</button>`}
+function scrPay(){const l=LOADS.find(x=>x.id===DEMO.lastPaid&&evOf(x.id).paidAt)||curLoad();if(!l)return nav("Carrier Pay","");const e=evOf(l.id),rc=stopsOf(l.id).filter(s=>s.type==="Receiver"),last=rc[rc.length-1],paid=!!e.paidAt;
+ if(dvRemit&&paid)return nav("Remittance",`${l.id} · ${esc(l.carrier)}`,{back:"remit"})+`<div class="dcard">
+ ${[["Load",l.id],["Customer ref",esc(l.ref)],["Linehaul (truck rate)",money(l.truck_rate)],["Quick-pay fee","$0.00"],["Detention",money(stopsOf(l.id).reduce((a,s,i)=>{const d=DEMO.det[l.id+"|"+i];return a+(d&&d.billed?d.amt||0:0)},0))],["Paid via","ACH ••••4821"],["Sent",tm(e.paidAt)+" today"]].map(([k,v])=>`<div class="row" style="padding:8px 0;border-bottom:1px solid #f0f0f2"><span class="lbl">${k}</span><b>${v}</b></div>`).join("")}
+ <p style="font-size:12px;color:var(--gr);margin:10px 0 0">Sample remittance. Detention is paid on the next run once the shipper approves it.</p></div>`;
+ const tl=(ok,d,a,b,t)=>`<div class="it ${ok?"":"wait"}"><span class="d">${ok?d:""}</span><div><b ${d==="$"&&ok?'style="color:var(--g)"':""}>${a}</b><span>${b}</span></div><span class="tm">${t}</span></div>`;
+ return nav("Carrier Pay",`${esc(l.carrier)} · MC #123456`)+
+ `<div class="hero ${paid?"":"wait"}"><div class="big">${paid?"✓":"⏳"}</div><div class="k">${paid?"Paid today":"Same-day pay"} · ${l.id}</div><div class="amt">${money(l.truck_rate)}</div>
+ <div class="sub">${paid?"ACH sent to account ••••4821 · arrives today":"Pays the same day once the load is delivered and the signed BOL is in"}</div></div>
+ <div class="dcard tl"><div class="lbl" style="margin-bottom:12px">Load timeline · Today</div>
+ ${tl(!!e.delivered||l.status==="Delivered","✓","Delivered",last?esc(last.name.replace(" (sample)",""))+" · "+esc(last.city):"",e.delivered?tm(e.delivered):l.status==="Delivered"?"✓":"—")}
+ ${tl(!!DEMO.bol[l.id],"✓","BOL received",DEMO.bol[l.id]?"Signed POD snapped by driver":"Snap it on My Load",tm(e.bolAt))}
+ ${tl(paid,"$","Paid same day","No invoice chasing · no factoring fee",tm(e.paidAt))}</div>
+ <div class="dcard cmp"><div class="lbl">How fast you get paid</div><div class="ln"><span>Pay It Forward Logistics</span><span style="color:var(--g)">Same day</span></div><div class="bar us">Today</div>
+ <div class="ln"><span>Typical broker</span><span style="color:var(--r)">30+ days</span></div><div class="bar them">Net 30 … 45 … waiting on paperwork</div></div>
+ <div style="margin:4px 14px"><button class="dbtn btn-o" data-a="remit" ${paid?"":"disabled style='opacity:.5'"}>View remittance</button></div>`}
+/* Inbox: a sample rate con the assistant has already read */
+const RC0={ref:"VFP-4502",po:"PO-VF-3417",rel:"PU-20466",rate:2400,weight:41000,pieces:24};
+function rc(){return DEMO.rc||(DEMO.rc={...RC0})}
+function nextId(){return "PIFL-"+(Math.max(...LOADS.map(l=>+l.id.split("-")[1]))+1)}
+function scrInbox(){const r=rc(),ed=!!DEMO.rcEdit,done=DEMO.rcDone;
+ const tag=k=>`<span class="atag ${r[k]!==RC0[k]?"ed":""}">${r[k]!==RC0[k]?"✎ edited":"✦ auto-filled"}</span>`;
+ const inp=(k,v,type="text")=>ed?`<input data-k="${k}" type="${type}" value="${esc(v)}">`:v;
+ return nav("Load Inbox",`loads@ inbox · ${done?"0":"1"} new`,{right:'<span class="pill p-g">AI ON</span>'})+
+ `<div class="dcard"><div class="mail"><span class="av">VF</span><div style="flex:1;min-width:0"><div class="row"><b>Rate Con from Valley Fresh</b><span class="m">7:12 AM</span></div>
+ <div class="m">dispatch@valleyfresh.example · Load ${esc(r.ref)}</div></div></div>
+ <div class="att"><span class="pdf">PDF</span>RateCon_${esc(RC0.ref)}.pdf<span style="margin-left:auto;color:var(--gr);font-weight:500">2 pages</span></div></div>
+ ${done?`<div class="okban"><b>✓ ${done} created</b>On the Load Board as Available and on the calendar for tomorrow. No retyping.</div>
+ <div class="btns"><button class="dbtn btn-g" data-a="viewnew">View ${done} on the board</button></div>`:
+ `<div class="ai"><span class="sp">✦</span>Read the rate con and built a new load</div>
+ <div class="dcard" style="padding:8px 14px">
+ <div class="f"><span class="k">Billing #</span><span class="v">${inp("ref",r.ref)}</span>${tag("ref")}</div>
+ <div class="f"><span class="k">Pickup PO</span><span class="v">${esc(r.po)} · ${esc(r.rel)}</span>${tag("po")}</div>
+ <div class="f"><span class="k">Pickup</span><span class="v">Valley Fresh Packing Shed<br><span style="font-weight:500;color:var(--gr);font-size:12px">Yuma, AZ · tomorrow 5:30 AM</span></span><span class="atag">✦ auto-filled</span></div>
+ <div class="f"><span class="k">Receiver</span><span class="v">Coastline Grocers DC<br><span style="font-weight:500;color:var(--gr);font-size:12px">Los Angeles, CA · 2:00 PM · CG-778305</span></span><span class="atag">✦ auto-filled</span></div>
+ <div class="f"><span class="k">Rate</span><span class="v">${ed?inp("rate",r.rate,"number"):money(r.rate)+" · Reefer TL"}</span>${tag("rate")}</div>
+ <div class="f"><span class="k">Weight</span><span class="v">${ed?inp("weight",r.weight,"number"):r.weight.toLocaleString()+" lb"}</span>${tag("weight")}</div>
+ <div class="f"><span class="k">Pieces</span><span class="v">${ed?inp("pieces",r.pieces,"number"):r.pieces+" pallets"}</span>${tag("pieces")}</div></div>
+ <div class="btns"><button class="dbtn btn-o" data-a="edit">${ed?"Done":"Edit"}</button><button class="dbtn btn-g" data-a="confirm">✓ Confirm load</button></div>
+ <div class="foot" style="margin-top:10px">Creates ${nextId()} · no retyping</div>`}`}
+function confirmRC(){readEdits();const r=rc(),id=nextId();
+ LOADS.push({id,customer:"Valley Fresh Produce (sample)",ref:r.ref,trailer:"Reefer",loadtype:"Truckload",hot:"No",status:"Available",miles:372,carrier:"",cust_rate:+r.rate,truck_rate:Math.round(r.rate*0.8125),
+  docs:null,carrier_status:"Docs Pending",carrier_paid:null,inv:null,inv_status:"Not Invoiced",inv_paid:null,notes:`Sample: built from the rate con PDF by the inbox assistant (RateCon_${RC0.ref}.pdf). Keep at 34°F, continuous.`});
+ const pc={load:id,desc:"Leaf lettuce, "+r.pieces+" pallets",loadtype:"Truckload",pieces:+r.pieces,weight:+r.weight};
+ STOPS.push({...pc,type:"Pickup",name:"Valley Fresh Packing Shed (sample)",city:"Yuma, AZ",day:1,time:"05:30",po:r.po,release:r.rel},
+  {...pc,type:"Receiver",name:"Coastline Grocers DC (sample)",city:"Los Angeles, CA",day:1,time:"14:00",po:"CG-778305",release:""});
+ DEMO.rcDone=id;DEMO.rcEdit=false;commit(`${id} added to the Load Board`)}
+function readEdits(){if(!DEMO.rcEdit)return;const r=rc();document.querySelectorAll(".dv input[data-k]").forEach(i=>{const k=i.dataset.k;r[k]=i.type==="number"?(+i.value||RC0[k]):(i.value.trim()||RC0[k])})}
+function scrCal(){const l=curLoad(),car=l&&l.carrier;const ls=LOADS.filter(x=>x.carrier===car),days={};
+ ls.forEach(x=>stopsOf(x.id).forEach((s,i)=>{if(s.day<-3||s.day>7)return;(days[s.day]=days[s.day]||[]).push({x,s,i})}));
+ const ks=Object.keys(days).map(Number).sort((a,b)=>a-b);
+ return nav("My Calendar",`${esc(car||"")} · this week`)+`<div class="ag">${ks.map(k=>`<h4>${k===0?"Today · ":k===1?"Tomorrow · ":k===-1?"Yesterday · ":""}${fD(dOff(k))}</h4><div class="dcard">${days[k].sort((a,b)=>a.s.time.localeCompare(b.s.time)).map(({x,s,i})=>{const done=stopDone(x,s);
+  return `<div class="ae" data-load="${x.id}" data-stop="${i}"><span class="k2 ${s.type==="Pickup"?"":"del"}">${s.type==="Pickup"?"PU":"DEL"}</span><div style="flex:1;min-width:0"><b style="font-size:14px">${fmtT(s.time)} · ${x.hot==="Yes"?"🔥":""}${x.id}</b><div style="font-size:12px;color:var(--gr)">${esc(s.name.replace(" (sample)",""))} · ${esc(s.city)}</div></div>${done?'<span class="chk">✓</span>':'<span style="color:#c4c5c8;font-size:20px">›</span>'}</div>`}).join("")}</div>`).join("")||'<div class="dcard">No stops this week.</div>'}
+ <p class="foot">Same stops as the broker Calendar tab · ✓ = done</p></div>`}
+function scrStop(){const l=LOADS.find(x=>x.id===dvStop.load),st=stopsOf(l.id),i=dvStop.i,s=st[i],pu=s.type==="Pickup",d=detOf(l,s,i),c=detCalc(d,s),billed=d.billed;
+ const rcN=st.slice(0,i+1).filter(x=>x.type==="Receiver").length;
+ const map=`<div class="map"><div class="rd" style="left:0;right:0;top:140px;height:12px"></div><div class="rd" style="left:118px;top:0;bottom:0;width:12px"></div><div class="rd" style="left:290px;top:0;bottom:0;width:9px"></div><div class="rd" style="left:0;right:0;top:44px;height:8px"></div>
+ <div class="blk" style="left:14px;top:62px;width:92px;height:66px"></div><div class="blk" style="left:14px;top:164px;width:92px;height:40px"></div><div class="blk" style="left:140px;top:164px;width:140px;height:40px"></div><div class="blk" style="left:310px;top:62px;width:60px;height:66px"></div><div class="blk" style="left:310px;top:164px;width:60px;height:40px"></div>
+ <div class="geo"></div><div class="pin"></div><div class="truck ${d.arr&&!d.dep?"":d.dep?"away":"away"}">🚛 Unit 12</div><div class="gps">● GPS geofence${d.arr?"":" · armed"}</div></div>`;
+ const t2=(lab,v)=>`<div class="t2"><div class="lbl">${lab}</div><div class="v ${v?"":"na"}">${v?fmtT(v):"--:--"}</div><div class="s">${v?(d.sim||d.gps?"📍 from GPS":"📍 from GPS"):"waiting for GPS"}</div></div>`;
+ let ban="",act="";
+ if(c){const fw=Math.min(c.on,FREE)/c.on*100;
+  ban=c.over?`<div class="ban"><div class="row"><span class="h">⏱ Detention: ${dur(c.over)}</span><span class="pill ${billed?"p-g":"p-r"}">${billed?"BILLED":"BILLABLE"}</span></div>
+  <div style="font-size:13px;color:#7a3a35;margin-top:2px">after 2 free hours · $${DRATE}/hr</div><div class="meter"><div class="free" style="width:${fw}%"></div><div class="det" style="width:${100-fw}%"></div></div>
+  <div class="leg"><span>On site ${dur(c.on)} · Appt ${c.appt}</span><span class="amt">${money(c.amt)}</span></div></div>`
+  :`<div class="ban okb"><div class="row"><span class="h">⏱ Inside free time</span><span class="pill p-g">NO DETENTION</span></div><div class="meter"><div class="free" style="width:${c.on/FREE*100}%"></div></div><div class="leg"><span>On site ${dur(c.on)} of 2h free · Appt ${c.appt}</span><span class="amt">$0.00</span></div></div>`;
+  act=c.over?(billed?`<button class="dbtn btn-o" disabled>✓ Detention billed · ${money(c.amt)} · ${tm(billed)}</button>`:`<button class="dbtn btn-g" data-a="bill">Bill detention · ${money(c.amt)}</button>`):"";}
+ else{ban=`<div class="ban okb"><div class="row"><span class="h">⏱ Detention clock</span><span class="pill p-s">${d.arr?"ON SITE":"NOT ARRIVED"}</span></div><div style="font-size:13px;color:var(--gr);margin-top:4px">Starts at GPS arrival · 2 free hours · then $${DRATE}/hr</div></div>`;
+  act=`<button class="dbtn btn-g" data-a="${d.arr?"gpsdep":"gpsarr"}">📍 Simulate GPS ${d.arr?"departure":"arrival"}</button>`}
+ return nav(`Stop ${i+1} · ${pu?"Pickup":"Delivery"}`,`${l.id} · ${esc(s.name)} · ${esc(s.city)}`,{back:"stop"})+map+`<div class="times">${t2("Arrived",d.arr)}${t2("Departed",d.dep)}</div>${ban}<div style="margin:0 14px">${act}</div>
+ <div class="foot">${c?"GPS log attached as proof · no arguing over times":"Demo: GPS times are simulated"}</div>`}
+function drawDrv(){const el=$("dvScr");if(!el)return;const y=el.scrollTop,same=el.dataset.v===(dvStop?"stop":dvTab+(dmCur||""));
+ const chat=!dvStop&&dvTab==="msg"&&dmCur;if(chat)mRead("marco",dmCur);el.classList.toggle("chatmode",!!chat);
+ el.innerHTML=dvStop?scrStop():dvTab==="msg"?scrMsg():dvTab==="pay"?scrPay():dvTab==="inbox"?scrInbox():dvTab==="cal"?scrCal():scrLoad();el.dataset.v=dvStop?"stop":dvTab+(dmCur||"");if(same)el.scrollTop=y;
+ document.querySelectorAll(".dv .dtabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===dvTab));
+ const dot=document.querySelector('.dv .dtabs [data-t="inbox"] .dot');if(dot)dot.hidden=!!DEMO.rcDone;
+ const clk=document.getElementById("dvClock");if(clk)clk.textContent=new Date().toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"}).replace(/ [AP]M/,"");
+ const l=curLoad(),sel=$("dvSel");if(sel)sel.onchange=()=>{DEMO.dLoad=sel.value;save();drawDrv()};
+ const bi=$("dvBol");if(bi&&l)bi.onchange=()=>{if(bi.files[0])onBOL(l,bi.files[0])};
+ el.querySelectorAll("[data-stage]").forEach(b=>b.onclick=()=>setStage(l,+b.dataset.stage));
+ el.querySelectorAll(".dstop").forEach(b=>b.onclick=()=>{dvStop={load:l.id,i:+b.dataset.stop};drawDrv();el.scrollTop=0});
+ el.querySelectorAll(".ae").forEach(b=>b.onclick=()=>{dvStop={load:b.dataset.load,i:+b.dataset.stop};drawDrv();el.scrollTop=0});
+ el.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>dvAct(b.dataset.a));
+ if(dvTab==="msg"&&!dvStop){el.querySelectorAll(".th").forEach(x=>x.onclick=()=>{dmCur=x.dataset.th;drawDrv()});
+  const bk=el.querySelector("[data-mback]");if(bk)bk.onclick=()=>{dmCur=null;drawDrv()};
+  if(dmCur)mWire(el,"marco",dmCur,f=>{drawDrv();if(f){const i=el.querySelector(".cmp input");if(i)i.focus()}})}
+ mBadges()}
+function dvAct(a){const el=$("dvScr");
+ if(a==="stop"){dvStop=null;drawDrv();return}
+ if(a==="remit"){dvRemit=!dvRemit;drawDrv();el.scrollTop=0;return}
+ if(a==="reset"){if(confirm("Reset the demo? This clears status taps, BOL photos, detention and the confirmed rate con.")){localStorage.removeItem(SKEY);location.reload()}return}
+ if(a==="edit"){if(DEMO.rcEdit)readEdits();DEMO.rcEdit=!DEMO.rcEdit;save();drawDrv();return}
+ if(a==="confirm"){confirmRC();return}
+ if(a==="viewnew"){tab("b");detail(DEMO.rcDone);return}
+ if(a==="bill"||a==="gpsarr"||a==="gpsdep"){const l=LOADS.find(x=>x.id===dvStop.load),s=stopsOf(l.id)[dvStop.i],d=detOf(l,s,dvStop.i),k=d.k,h=hsh(k);
+  const cur={arr:d.arr,dep:d.dep,...(DEMO.det[k]||{})};
+  if(a==="gpsarr"){cur.arr=m2t(t2m(s.time)+(h%26)-8);cur.gps=1;DEMO.det[k]=cur;commit("GPS: truck entered the geofence")}
+  else if(a==="gpsdep"){cur.dep=m2t(t2m(cur.arr)+75+(h>>5)%150);cur.gps=1;DEMO.det[k]=cur;commit("GPS: truck left the geofence")}
+  else{const c=detCalc(cur,s);cur.billed=nowISO();cur.amt=c.amt;DEMO.det[k]=cur;commit(`Detention billed · ${money(c.amt)} added to ${l.id}`)}}}
+function sizeDrv(){const p=document.querySelector(".dv");if(!p||$("vDrv").hidden)return;p.style.setProperty("--dvh",Math.max(480,innerHeight-p.getBoundingClientRect().top-scrollY)+"px")}
+document.querySelectorAll(".dv .dtabs button").forEach(b=>b.onclick=()=>{dvTab=b.dataset.t;dvStop=null;dvRemit=false;dmCur=null;const t=document.querySelector(".dv .toast");if(t)t.classList.remove("show");drawDrv();$("dvScr").scrollTop=0});
+addEventListener("resize",sizeDrv);
+/* broker side: show what the driver app did */
+function drvTags(l){const b=DEMO.bol[l.id],e=DEMO.ev[l.id]||{},det=Object.entries(DEMO.det).filter(([k,d])=>k.startsWith(l.id+"|")&&d.billed);
+ return (b?'<span class="tag dvtag">📷 BOL in</span>':"")+(e.paidAt?'<span class="tag dvtag">💵 Paid same day</span>':"")+(det.length?`<span class="tag dvtag">⏱ Detention billed</span>`:"")}
+function drvDetail(l){const b=DEMO.bol[l.id],e=DEMO.ev[l.id]||{},st=stopsOf(l.id);
+ const dets=st.map((s,i)=>{const d=detOf(l,s,i),c=detCalc(d,s);return c&&c.over?`<div class="kv"><b>Stop ${i+1} detention · ${esc(s.city)}</b>${dur(c.over)} · ${money(c.amt)} · ${d.billed?'<span style="color:var(--g);font-weight:700">Billed ✓</span>':"Not billed"}<br><small>GPS ${fmtT(d.arr)} → ${fmtT(d.dep)}</small></div>`:""}).join("");
+ const evs=[["Loaded",e.loaded],["En Route",e.enroute],["Delivered",e.delivered],["BOL received",e.bolAt],["Carrier paid",e.paidAt]].filter(x=>x[1]).map(([k,v])=>kv(k,tm(v))).join("");
+ if(!b&&!dets&&!evs)return "";
+ return `<h3 style="margin:14px 0 6px">From the driver app (demo)</h3>${b?`<img src="${b}" alt="BOL photo" style="max-width:160px;border-radius:8px;border:1px solid #ddd;float:right;margin:0 0 8px 8px">`:""}<div class="grid">${evs}${dets}</div><div style="clear:both"></div>`}
+// ---------- Messages: DEMO ONLY. No backend: threads live in localStorage and nothing is ever sent. ----------
+const PPL={chris:{n:"Chris (owner)",i:"CE"},dana:{n:"Dana (dispatch)",i:"DR"},marco:{n:"Marco (driver)",i:"MD"},lena:{n:"Lena (driver)",i:"LO"},rosa:{n:"Rosa · Mesa Flatbed",i:"RM"},kim:{n:"Kim · Valley Fresh",i:"KV"}};
+const SAMPLE_BOL="data:image/svg+xml;utf8,"+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="240" height="180"><rect width="240" height="180" fill="#d9d4c7"/><g transform="rotate(-4 120 90)"><rect x="34" y="14" width="172" height="156" fill="#fbfaf5" stroke="#cfcab9"/><text x="48" y="36" font-family="Arial" font-size="13" font-weight="700" fill="#222">BILL OF LADING</text><text x="48" y="50" font-family="Arial" font-size="8" fill="#555">PIFL-1002 · VFP-4471 · PO-VF-3381</text>${[62,72,82,92,102,112].map(y=>`<rect x="48" y="${y}" width="${90+y%40}" height="4" fill="#c9c6bb"/>`).join("")}<path d="M120 140 q10 -14 20 0 t22 -2 t16 4" stroke="#1f3fa0" stroke-width="2" fill="none"/><text x="48" y="156" font-family="Arial" font-size="7" fill="#777">Shipper signature · SAMPLE</text></g></svg>`);
+function msgSeed(){return{
+ grp:{name:"PIFL Dispatch",sub:"Chris, Dana, Marco, Lena",grp:1,who:["chris","dana","marco","lena"],m:[
+  {f:"chris",t:"5:02 AM",x:"Morning team ☀️ PIFL-1002 is HOT. Reefer at 34°F the whole way."},
+  {f:"dana",t:"5:06 AM",x:"Marco has it. 5:30 appt at the Yuma shed."},
+  {f:"lena",t:"5:40 AM",x:"Tucson drop on PIFL-1003 is next, then El Paso tomorrow."},
+  {f:"chris",t:"5:41 AM",x:"👍 Text the BOL as soon as it's signed so we can pay same day."}]},
+ dm:{name:"Marco (driver)",dname:"Dana (dispatch)",sub:"Red Rock Carriers · PIFL-1002",who:["dana","marco"],m:[
+  {f:"marco",t:"6:48 AM",img:"bol",x:"Loaded, rolling out of Yuma 🚛"},
+  {f:"marco",t:"6:49 AM",load:"PIFL-1002"},
+  {f:"dana",t:"6:52 AM",x:"Got the BOL, thanks! Reefer reading 34° on my end."},
+  {f:"marco",t:"9:15 AM",x:"Running 20 min late, traffic on I-10 past Quartzsite"},
+  {f:"dana",t:"9:17 AM",x:"No problem, I'll give Coastline a heads up. Drive safe."}]},
+ car:{name:"Mesa Flatbed LLC",sub:"Rosa · carrier billing",who:["dana","rosa"],m:[
+  {f:"rosa",t:"7:30 AM",x:"BOL sent for PIFL-1006 (Desert Bloom). When do we get paid?"},
+  {f:"dana",t:"7:42 AM",x:"Paid today ✓ ACH $1,800.00 went to your account ending ••••7310."},
+  {f:"dana",t:"7:42 AM",load:"PIFL-1006"},
+  {f:"rosa",t:"7:44 AM",x:"Wow, same day. That's why we haul for you 🙌"}]},
+ shp:{name:"Valley Fresh (shipper)",sub:"Kim · shipping desk",who:["dana","kim"],m:[
+  {f:"kim",t:"8:05 AM",x:"Morning! Any update on VFP-4471? Coastline is asking for an ETA."},
+  {f:"dana",t:"8:09 AM",x:"Loaded at 6:40 and rolling. Reefer at 34°F. ETA LA 2:00 PM, the driver texts at the gate."},
+  {f:"dana",t:"8:09 AM",load:"PIFL-1002"},
+  {f:"kim",t:"9:20 AM",x:"Heard about the I-10 traffic. Still OK for the 2 PM window?"}]}}}
+// what each viewer has already read (index into the thread), so unread badges show on first open
+const MREAD0={dana:{grp:4,dm:3,car:1,shp:3},marco:{grp:3,dm:4}};
+const MSG=()=>DEMO.msg||(DEMO.msg={th:msgSeed(),read:JSON.parse(JSON.stringify(MREAD0))});
+const mThreads=me=>Object.entries(MSG().th).filter(([k,t])=>t.who.includes(me));
+function mUnread(me,k){const t=MSG().th[k],r=(MSG().read[me]||{})[k]||0;return t.m.slice(r).filter(m=>!m.sys&&m.f!==me).length}
+const mUnreadAll=me=>mThreads(me).reduce((a,[k])=>a+mUnread(me,k),0);
+const mTitle=(t,me)=>me==="marco"&&t.dname?t.dname:t.name;
+const mAv=(t,me,sm)=>t.grp?`<span class="av grp ${sm?"sm":""}">PD</span>`:`<span class="av ${sm?"sm":""}">${PPL[t.who.find(w=>w!==me)].i}</span>`;
+const mTime=m=>m.at?tm(m.at):m.t;
+function mPrev(m){return m.sys?"⚙︎ "+m.x:m.load?"📦 "+m.load:m.img?"📷 Photo":m.x}
+function sysPost(text,load){const th=MSG().th;th.grp.m.push({sys:1,at:nowISO(),x:text});if(load==="PIFL-1002")th.dm.m.push({sys:1,at:nowISO(),x:text})}
+function mList(me,cur){return mThreads(me).map(([k,t])=>{const u=mUnread(me,k),last=t.m[t.m.length-1];
+ return `<div class="th ${u?"unr":""} ${k===cur?"on":""}" data-th="${k}">${mAv(t,me)}<div class="tx"><b>${esc(mTitle(t,me))}<small>${mTime(last)}</small></b><div class="pv">${esc(mPrev(last))}</div></div>${u?`<span class="ub">${u}</span>`:""}</div>`}).join("")}
+function mLoadCard(id){const l=LOADS.find(x=>x.id===id);if(!l)return "";const st=stopsOf(id),pu=st.find(s=>s.type==="Pickup"),rc=st.filter(s=>s.type==="Receiver");
+ return `<div class="lc" data-load="${id}"><div class="h">📦 ${id}${l.hot==="Yes"?"<i>HOT</i>":""}</div><div class="r">${esc(pu?pu.city:"")} → ${rc.map(r=>esc(r.city)).join(" → ")}</div><div class="r">${esc(l.customer.replace(" (sample)",""))} · ${l.trailer} · ${l.miles} mi</div><div class="st">● ${l.status}${l.carrier_status==="Paid"?" · Paid ✓":""}</div><div class="op">Open load ›</div></div>`}
+function mChat(me,k){const t=MSG().th[k];let prev=null,h="";
+ t.m.forEach(m=>{if(m.sys){h+=`<div class="sys">${esc(m.x)} <small>· ${mTime(m)}</small></div>`;prev=null;return}
+  const mine=m.f===me;if(t.grp&&!mine&&prev!==m.f)h+=`<div class="who">${esc(PPL[m.f].n)}</div>`;
+  const av=mine?"":`<span class="av sm" style="${t.grp||prev!==m.f?"":"visibility:hidden"}">${PPL[m.f].i}</span>`;
+  const body=m.load?mLoadCard(m.load):m.img?`<div class="bb ph"><img src="${(DEMO.bol&&DEMO.bol["PIFL-1002"])||SAMPLE_BOL}" alt="BOL photo"><div>${esc(m.x||"")}</div></div>`:`<div class="bb">${esc(m.x)}</div>`;
+  h+=`<div class="row ${mine?"me":""}">${av}${body}</div>`;
+  if(m.local)h+=`<div class="note" style="${mine?"":"align-self:flex-start;margin-left:38px"}">${mTime(m)} · demo, not sent</div>`;prev=m.f});
+ return `<div class="ch"><button class="bk" data-mback aria-label="Back">‹</button>${mAv(t,me)}<div class="tx"><b>${esc(mTitle(t,me))}</b><span>${esc(t.sub)}</span></div><span class="demo">DEMO</span></div>
+ <div class="ms">${h}</div><form class="cmp"><input placeholder="iMessage-style demo · not sent" aria-label="Message" enterkeyhint="send"><button aria-label="Send">↑</button></form><div class="hint">Demo only: messages stay on this device and are never sent.</div>`}
+function mRead(me,k){const r=MSG().read[me]||(MSG().read[me]={});if(r[k]!==MSG().th[k].m.length){r[k]=MSG().th[k].m.length;save()}}
+function mWire(root,me,k,redraw){if(!k)return;const t=MSG().th[k],ms=root.querySelector(".ms");
+ if(ms)ms.scrollTop=ms.scrollHeight;
+ root.querySelectorAll(".lc").forEach(c=>c.onclick=()=>detail(c.dataset.load));
+ const f=root.querySelector(".cmp"),i=f&&f.querySelector("input");
+ if(f)f.onsubmit=e=>{e.preventDefault();const v=i.value.trim();if(!v)return;t.m.push({f:me,at:nowISO(),x:v,local:1});save();redraw(true)}}
+/* broker tab */
+let mbCur=null;
+function drawMsgs(focus){const el=$("mxBox");if(!el)return;const cur=mbCur||(innerWidth>700?"dm":null),vis=!$("vMsg").hidden;
+ if(cur&&vis)mRead("dana",cur);el.className="mx mxb "+(mbCur?"open":"");
+ el.innerHTML=`<div class="list"><div class="lh">Messages <span class="demo">DEMO · nothing is sent</span></div>${mList("dana",cur)}</div><div class="chat">${cur?mChat("dana",cur):""}</div>`;
+ el.querySelectorAll(".th").forEach(x=>x.onclick=()=>{mbCur=x.dataset.th;drawMsgs()});
+ const b=el.querySelector("[data-mback]");if(b)b.onclick=()=>{mbCur=null;drawMsgs()};
+ if(cur)mWire(el,"dana",cur,f=>drawMsgs(f));
+ if(focus){const i=el.querySelector(".cmp input");if(i)i.focus()}
+ mBadges();sizeMsgs()}
+function sizeMsgs(){const el=$("mxBox");if(!el||$("vMsg").hidden)return;el.style.setProperty("--mh",Math.max(440,innerHeight-el.getBoundingClientRect().top-scrollY-12)+"px")}
+addEventListener("resize",sizeMsgs);
+function mBadges(){const n=mUnreadAll("dana"),b=$("tMsgN");if(b){b.textContent=n;b.hidden=!n}
+ const d=document.querySelector('.dv .dtabs [data-t="msg"] .dot'),n2=mUnreadAll("marco");if(d){d.textContent=n2;d.hidden=!n2}}
+/* driver view tab */
+let dmCur=null;
+function scrMsg(){if(dmCur)return `<div class="mx"><div class="chat">${mChat("marco",dmCur)}</div></div>`;
+ return nav("Messages","Marco · Red Rock Carriers",{right:'<span class="mx"><span class="demo">DEMO</span></span>'})+`<div class="mx" style="margin:0 14px;border-radius:16px;overflow:hidden">${mList("marco")}</div><p class="foot" style="padding:0 20px">Demo only. Status taps on My Load post here automatically.</p>`}
+
+function draw(){drawBoard();drawAcct();drawCal();drawDrv();drawMsgs();const d=DIRTY||!!localStorage.getItem(SKEY);$("bReset").hidden=!d;$("dvNote").hidden=!d}
+const TABS={b:["vBoard","tBoard","#board"],c:["vCal","tCal","#calendar"],a:["vAcct","tAcct","#accounting"],m:["vMsg","tMsg","#messages"],d:["vDrv","tDrv","#driver"]};
+function tab(t){for(const[k,[v,b]]of Object.entries(TABS)){$(v).hidden=k!==t;$(b).classList.toggle("on",k===t)}
+ const mn=document.querySelector("main");mn.classList.toggle("full",t==="c");mn.classList.toggle("drv",t==="d");
+ document.querySelector(".bar").hidden=t==="d"||t==="m";document.querySelector("p.note").hidden=t==="d";
+ history.replaceState(null,"",TABS[t][2]);$(TABS[t][1]).scrollIntoView({block:"nearest",inline:"nearest"});if(t==="c")drawCal();if(t==="d"){drawDrv();sizeDrv()}if(t==="m")drawMsgs()}
+$("tBoard").onclick=()=>tab("b");$("tCal").onclick=()=>tab("c");$("tAcct").onclick=()=>tab("a");$("tMsg").onclick=()=>tab("m");$("tDrv").onclick=()=>tab("d");
+$("bReset").onclick=$("bReset2").onclick=()=>dvAct("reset");$("fTrailer").onchange=draw;
+draw();{const h=Object.entries(TABS).find(([k,v])=>v[2]===location.hash);if(h&&h[0]!=="b")tab(h[0])}
 </script></body></html>
