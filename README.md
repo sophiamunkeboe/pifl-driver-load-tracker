@@ -1,3 +1,5 @@
+<img src="assets/pifl-logo.jpg" alt="Pay It Forward Logistics, LLC" width="260">
+
 # PIFL Load Tracker
 
 A load tracker for **Pay It Forward Logistics** ([payitforwardlogistics.com](https://payitforwardlogistics.com)), a family-owned freight brokerage in Arizona led by former CDL drivers. It follows a load from the board to the driver to the money: load status, pickup and receiver details, what we bill and what we pay, and the two 30-day pay clocks.
@@ -139,6 +141,8 @@ The spec was dictated by voice, so a few calls were made:
 |---|---|
 | `PIFL_Driver_Load_Tracker.xlsx` | The tracker: `Loads`, `Stops`, `Lists`, with dropdowns, formulas and red highlights. |
 | `index.html` | Static preview (GitHub Pages): Load Board, load detail, Accounting tab, trailer filter. No backend. |
+| `assets/` | Logo, shield crop and icons. Brand green `#427B2F`, silver `#AAABAE`, wordmark grey `#808182`. |
+| `favicon.ico` | Favicon from the shield. |
 | `README.md` | This file. |
 
 ## Next step

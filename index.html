@@ -1,34 +1,36 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PIFL Load Tracker</title>
+<link rel="icon" href="favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"><link rel="apple-touch-icon" href="assets/apple-touch-icon.png"><meta name="theme-color" content="#427b2f">
 <style>
-*{box-sizing:border-box}
+:root{--g:#427b2f;--gd:#2f5c20;--gl:#e7f0e3;--s:#aaabae;--sd:#808182;--sl:#eeeff0;--red:#c00000}
+*{box-sizing:border-box}a{color:var(--gd)}
 body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0;background:#f4f6f9;color:#1b2430}
-header{background:#1f3a5f;color:#fff;padding:14px 18px}header h1{margin:0;font-size:1.25rem}header p{margin:3px 0 0;opacity:.85;font-size:.85rem}
-nav{display:flex;gap:4px;background:#1f3a5f;padding:0 12px}
-nav button{background:none;border:0;color:#cfd8e3;font-size:1rem;padding:10px 14px;border-bottom:3px solid transparent;cursor:pointer}
-nav button.on{color:#fff;border-bottom-color:#f0b429;font-weight:600}
+header{background:#fff;color:#1b2430;padding:10px 18px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--sl)}header img{height:64px;width:auto}header h1{margin:0;font-size:1.2rem;color:var(--g)}header p{margin:3px 0 0;color:var(--sd);font-size:.85rem}
+nav{display:flex;gap:4px;background:var(--g);padding:0 12px}
+nav button{background:none;border:0;color:#dbe8d5;font-size:1rem;padding:10px 14px;border-bottom:3px solid transparent;cursor:pointer}
+nav button.on{color:#fff;border-bottom-color:var(--s);font-weight:600}
 main{padding:14px;max-width:1300px;margin:auto}
 .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
 select,.btn{font-size:.95rem;padding:7px 10px;border-radius:8px;border:1px solid #c5cdd8;background:#fff;color:#1b2430;text-decoration:none}
-.btn{background:#1f3a5f;color:#fff;border-color:#1f3a5f}
+.btn{background:var(--g);color:#fff;border-color:var(--g)}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{border:1px solid #c5cdd8;background:#fff;border-radius:999px;padding:5px 11px;font-size:.85rem;cursor:pointer}
-.chip.on{background:#1f3a5f;color:#fff;border-color:#1f3a5f}
+.chip.on{background:var(--g);color:#fff;border-color:var(--g)}
 .board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
 .col h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:#5a6676;margin:0 0 6px;display:flex;justify-content:space-between}
-.col h2 span{background:#dde3ea;border-radius:999px;padding:0 8px;color:#1b2430}
-.card{background:#fff;border-radius:10px;padding:10px 11px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.09);cursor:pointer;border-left:4px solid #4a7bb7}
+.col h2 span{background:var(--sl);border-radius:999px;padding:0 8px;color:#1b2430}
+.card{background:#fff;border-radius:10px;padding:10px 11px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.09);cursor:pointer;border-left:4px solid var(--g)}
 .card:hover{box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .card.hot{border-left-color:#c00000;background:#fdecee}
 .card .id{font-weight:700}.card .cust{font-size:.85rem;color:#3d4a5c}
 .card .lane{font-size:.85rem;margin:5px 0}.card .meta{display:flex;flex-wrap:wrap;gap:4px}
-.tag{font-size:.72rem;background:#eef2f7;border-radius:4px;padding:2px 6px}
+.tag{font-size:.72rem;background:var(--sl);border-radius:4px;padding:2px 6px}
 .tag.hot{background:#c00000;color:#fff;font-weight:700}
 .empty{font-size:.8rem;color:#8a95a5;padding:8px;border:1px dashed #c5cdd8;border-radius:8px;text-align:center}
 .flow{font-size:.8rem;color:#5a6676;margin-bottom:10px}
 table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 th,td{padding:8px 10px;border-bottom:1px solid #e3e7ee;text-align:left;font-size:.88rem;vertical-align:top}
-th{background:#1f3a5f;color:#fff}
+th{background:var(--g);color:#fff}
 td.over{background:#c00000;color:#fff;font-weight:700}
 td.ok{color:#1d6b35;font-weight:600}td.muted{color:#8a95a5}
 .status{font-size:.75rem;border-radius:4px;padding:2px 6px;background:#eef2f7;white-space:nowrap}
@@ -44,18 +46,18 @@ td.ok{color:#1d6b35;font-weight:600}td.muted{color:#8a95a5}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:10px 0}
 .kv{background:#f4f6f9;border-radius:8px;padding:7px 9px}.kv b{display:block;font-size:.7rem;text-transform:uppercase;color:#5a6676;font-weight:600}
 .stop{border:1px solid #e3e7ee;border-radius:10px;padding:10px;margin:8px 0}
-.stop h4{margin:0 0 4px;font-size:.95rem}.stop.pu{border-left:4px solid #4a7bb7}.stop.rc{border-left:4px solid #1d6b35}
+.stop h4{margin:0 0 4px;font-size:.95rem}.stop.pu{border-left:4px solid var(--g)}.stop.rc{border-left:4px solid #1d6b35}
 .stop .grid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr));margin:6px 0 0}
 .money{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.money .kv.m{background:#e6f4ea}
+.money .kv.m{background:var(--gl)}
 .note{font-size:.8rem;color:#5a6676;margin-top:14px}
-@media(max-width:900px){.ov{padding:8px}.board{grid-template-columns:1fr}.money{grid-template-columns:repeat(2,1fr)}
+@media(max-width:900px){.ov{padding:8px}header{padding:8px 12px;gap:10px}header img{height:52px}header h1{font-size:1.05rem}header p{font-size:.75rem}.board{grid-template-columns:1fr}.money{grid-template-columns:repeat(2,1fr)}
  .acct table,.acct thead,.acct tbody,.acct tr,.acct td{display:block}.acct thead{display:none}
  .acct tr{margin-bottom:10px;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.1);background:#fff}
  .acct td{border-bottom:1px solid #eef1f5}.acct td::before{content:attr(data-l);display:block;font-size:.68rem;text-transform:uppercase;color:#5a6676;font-weight:600}
  .acct td.over::before{color:#fde}}
 </style></head><body>
-<header><h1>Pay It Forward Logistics · Load Tracker</h1><p>Load board, load details and the 30-day pay clocks · sample data only</p></header>
+<header><img src="assets/pifl-logo.jpg" alt="Pay It Forward Logistics, LLC" width="120" height="64"><div><h1>Load Tracker</h1><p>Load board, load details and the 30-day pay clocks · sample data only</p></div></header>
 <nav><button id="tBoard" class="on">Load Board</button><button id="tAcct">Accounting</button></nav>
 <main>
 <div class="bar">
