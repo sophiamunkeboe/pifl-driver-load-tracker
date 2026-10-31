@@ -21,19 +21,27 @@ This folder is staged on the `intro-preview` branch only. `main` and the live tr
 - `?nointro` turns it off.
 - With **prefers-reduced-motion**, there is no warp. The logo and text simply fade in, and it is done in about 3.6 s.
 
-## Sound (Web Audio, no audio files)
+## Sound (recorded clips + Web Audio)
 
-Browsers block audio until the user taps, so the intro opens on a **"Tap to start your engine"** screen. The 🔊 button mutes or unmutes, and the choice is remembered in `localStorage` under `pifl-intro-muted`. Esc or Skip on the start screen goes straight to the app with no sound.
+Browsers block audio until the user taps, so the intro opens on a **"Tap to start your engine"** screen. That tap creates and resumes the audio context and plays a silent buffer, which unlocks audio on iOS; on iOS 17+ it also sets `navigator.audioSession.type = "playback"` so the intro is heard with the ringer switch on silent. The 🔊 button mutes or unmutes (all clips and synth go through one master gain), and the choice is remembered in `localStorage` under `pifl-intro-muted`. Esc or Skip on the start screen goes straight to the app with no sound. The clips are prefetched on page load and decoded on the tap.
 
-| t after tap | sound |
-|---|---|
-| 0–0.35 s | starter cranks |
-| 0.35–3.0 s | diesel catches, revs, shifts, revs again; warp whoosh + sub rumble build |
-| 2.55–3.95 s | jake-brake "brap" growl as the lanes streak |
-| 3.05 s | sub boom on the flash |
-| 3.62 s | air-brake "pssht" hiss, just before the reveal |
-| 4.05 s | deep metallic thunk as the shield locks in |
-| 4.1–7.3 s | low diesel idle under the name and tagline |
-| 7.3 s | deep two-blast air horn (A1/A2/C#3/E3 chord), "honk honk", into the dashboard |
+| t after tap | sound | source |
+|---|---|---|
+| 0–0.35 s | starter cranks | synth |
+| 0.3–2.8 s | semi pulling through the gears (rev, shift, rev) under the warp whoosh + sub rumble | `assets/semi-gears-rev.mp3` |
+| 2.3–4.1 s | jake brake | `assets/jake-brake.mp3` |
+| 3.05 s | sub boom on the flash | synth |
+| 3.55 s | air-brake "pssht" as the truck stops; its hiss tail settles under the name | `assets/air-brake-hiss.mp3` |
+| 4.05 s | deep metallic thunk as the shield locks in | synth |
+| 7.3 s | double air horn "honk honk" into the dashboard (the clip is already two blasts; played once) | `assets/truck-horn-2.mp3` |
 
 Skipping mid-intro cuts the soundtrack and still plays the honk-honk. Reduced motion keeps only the thunk and the horn.
+
+### Sound credits (all Pixabay Content License: free to use, no attribution required)
+
+| file | Pixabay page | title / author | trim |
+|---|---|---|---|
+| `truck-horn-2.mp3` | https://pixabay.com/sound-effects/truck-horn-2-280800/ | Truck Horn #2 / Audley_Fergine | full clip |
+| `semi-gears-rev.mp3` | https://pixabay.com/sound-effects/city-freightliner-going-through-gears-34081/ | freightliner going through gears / freesound_community | 18.3–20.8 s, fades |
+| `jake-brake.mp3` | https://pixabay.com/sound-effects/city-truck-jake-brake-63220/ | truck jake brake / freesound_community | 12.9–14.65 s, fades |
+| `air-brake-hiss.mp3` | https://pixabay.com/sound-effects/film-special-effects-air-brakes-loud-fade-out-96993/ | air_brakes_loud_fade_out / freesound_community | 0–4.4 s, fade out |

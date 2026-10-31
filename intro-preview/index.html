@@ -717,8 +717,10 @@ draw();{const h=Object.entries(TABS).find(([k,v])=>v[2]===location.hash);if(h&&h
 /* PIFL warp intro (preview). Self-contained: canvas + CSS, no libraries, no files except the shield PNG.
    Modeled on the ICON | Kelso concept intro (starfield warp -> flash -> logo resolve -> fade), re-themed for trucking.
    ?nointro skips it. Skip button / Esc skip it. prefers-reduced-motion gets a short, still fade.
-   Sound: 100% synthesized with Web Audio (no audio files). Browsers only allow audio after a user gesture,
-   so the intro opens on a "Tap to start your engine" gate; the 🔊 button mutes (remembered in localStorage). */
+   Sound: real recorded clips in assets/ (gear revs, jake brake, air brake, double air horn; Pixabay Content License,
+   see README) mixed with Web Audio synth (starter crank, warp whoosh, sub boom, lock thunk). Browsers only allow audio
+   after a user gesture, so the intro opens on a "Tap to start your engine" gate that also unlocks iOS audio;
+   the 🔊 button mutes (remembered in localStorage). */
 (function(){
 const qs = new URLSearchParams(location.search);
 if (qs.has("nointro")) return;
@@ -891,51 +893,37 @@ function frame(now){
   raf=requestAnimationFrame(frame);
 }
 
-/* ---------- sound: every sound is synthesized with Web Audio ----------
+/* ---------- sound: recorded clips + Web Audio synth ----------
    score(ctx, out, s, o) schedules the whole soundtrack at ctx time s. It is pure scheduling,
    so the same function drives live playback and an OfflineAudioContext render (used for the preview video). */
 function noiseBuf(ctx){ const n=ctx.sampleRate*2, b=ctx.createBuffer(1,n,ctx.sampleRate), d=b.getChannelData(0); for(let i=0;i<n;i++) d[i]=Math.random()*2-1; return b; }
 function shaper(ctx,k){ const n=2048,c=new Float32Array(n); for(let i=0;i<n;i++){const x=i/(n-1)*2-1; c[i]=Math.tanh(k*x)/Math.tanh(k);} const w=ctx.createWaveShaper(); w.curve=c; w.oversample="2x"; return w; }
 function noise(ctx,nb,s,e){ const n=ctx.createBufferSource(); n.buffer=nb; n.loop=true; n.start(s,Math.random()*1.5); n.stop(e); return n; }
 function pts(param,list){ list.forEach(([t,v,kind],i)=>{ if(i===0) param.setValueAtTime(v,t); else if(kind==="e") param.exponentialRampToValueAtTime(Math.max(v,1e-4),t); else if(kind==="s") param.setValueAtTime(v,t); else param.linearRampToValueAtTime(v,t); }); }
-function horn(ctx,out,t){ /* deep two-blast air horn: low A-major chord (A2 C#3 E3 + A1 body), each note 2 detuned saws */
-  const bus=ctx.createGain(); const lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=1500; lp.Q.value=0.8;
-  const pk=ctx.createBiquadFilter(); pk.type="peaking"; pk.frequency.value=420; pk.gain.value=5; pk.Q.value=1;
-  const sh=shaper(ctx,1.8); bus.connect(sh); sh.connect(lp); lp.connect(pk); pk.connect(out);
-  [[t,0.42],[t+0.58,0.95]].forEach(([b,dur])=>{
-    const g=ctx.createGain(); g.connect(bus); pts(g.gain,[[b,0],[b+0.035,0.19],[b+dur-0.09,0.175],[b+dur,0,"l"]]);
-    [55,110,138.59,164.81].forEach((f,j)=>[-5,5].forEach(cents=>{ const o=ctx.createOscillator(); o.type=j===0?"square":"sawtooth"; o.detune.value=cents;
-      pts(o.frequency,[[b,f*0.93],[b+0.07,f,"l"],[b+dur,f*0.99,"l"]]); const og=ctx.createGain(); og.gain.value=j===0?0.35:0.5; o.connect(og); og.connect(g); o.start(b); o.stop(b+dur+0.05); }));
-    /* air rush on each blast */
-    const n=noise(ctx,ctx._nb||(ctx._nb=noiseBuf(ctx)),b,b+dur); const bp=ctx.createBiquadFilter(); bp.type="bandpass"; bp.frequency.value=1800; bp.Q.value=0.7;
-    const ng=ctx.createGain(); pts(ng.gain,[[b,0],[b+0.03,0.05],[b+dur,0,"l"]]); n.connect(bp); bp.connect(ng); ng.connect(out);
-  });
+/* recorded clips: prefetched on load, decoded per AudioContext (live or offline) */
+const SND_BASE=(document.currentScript&&document.currentScript.src)||location.href;
+const SND={rev:"assets/semi-gears-rev.mp3", jake:"assets/jake-brake.mp3", air:"assets/air-brake-hiss.mp3", horn:"assets/truck-horn-2.mp3"};
+const RAW={}; Object.keys(SND).forEach(k=>{ try{ RAW[k]=fetch(new URL(SND[k],SND_BASE)).then(r=>r.ok?r.arrayBuffer():null).catch(()=>null); }catch(e){ RAW[k]=Promise.resolve(null); } });
+function getBuf(ctx,k){ ctx._bufs=ctx._bufs||{}; return ctx._bufs[k]||(ctx._bufs[k]=RAW[k].then(ab=>ab&&new Promise(res=>{ try{ const p=ctx.decodeAudioData(ab.slice(0),res,()=>res(null)); if(p&&p.catch) p.catch(()=>res(null)); }catch(e){ res(null); } }))); }
+function clip(ctx,out,k,t,gain){ /* play clip k at ctx time t; if it decoded late, join it mid-clip */
+  return getBuf(ctx,k).then(b=>{ if(!b) return; const src=ctx.createBufferSource(); src.buffer=b; const g=ctx.createGain(); g.gain.value=gain==null?1:gain; src.connect(g); g.connect(out);
+    const now=ctx.currentTime||0; if(t>=now) src.start(t); else { const off=now-t; if(off<b.duration-0.05) src.start(now,off); } });
 }
+function horn(ctx,out,t){ return clip(ctx,out,"horn",t,1); } /* "Truck Horn #2" is already a double blast: honk honk */
 function thunk(ctx,out,t,amt){ /* deep metallic lock-in */
   const o=ctx.createOscillator(); o.type="sine"; pts(o.frequency,[[t,130],[t+0.22,40,"e"]]); const g=ctx.createGain(); pts(g.gain,[[t,0],[t+0.006,0.75*amt],[t+0.7,0.001,"e"]]); o.connect(g); g.connect(out); o.start(t); o.stop(t+0.75);
   [[173,.7],[412,.45],[689,.35],[1031,.3],[1587,.18],[2390,.12]].forEach(([f,d],i)=>{ const p=ctx.createOscillator(); p.type="sine"; p.frequency.value=f; const pg=ctx.createGain(); pts(pg.gain,[[t,0],[t+0.004,(0.16-i*0.018)*amt],[t+d,0.0005,"e"]]); p.connect(pg); pg.connect(out); p.start(t); p.stop(t+d+0.05); });
   const n=noise(ctx,ctx._nb,t,t+0.06), bp=ctx.createBiquadFilter(); bp.type="bandpass"; bp.frequency.value=2600; bp.Q.value=1.2; const ng=ctx.createGain(); pts(ng.gain,[[t,0.5*amt],[t+0.05,0.001,"e"]]); n.connect(bp); bp.connect(ng); ng.connect(out);
 }
-function score(ctx,out,s,o){
-  const nb=ctx._nb||(ctx._nb=noiseBuf(ctx));
+function score(ctx,out,s,o){ /* returns a promise that resolves once every clip is scheduled */
+  const nb=ctx._nb||(ctx._nb=noiseBuf(ctx)), clips=[];
   if (!o.reduce){
     /* key-start: starter motor cranks, then the diesel catches */
     for (let i=0;i<4;i++){ const b=s+i*0.1, n=noise(ctx,nb,b,b+0.08), bp=ctx.createBiquadFilter(); bp.type="bandpass"; bp.frequency.value=520; bp.Q.value=2; const g=ctx.createGain(); pts(g.gain,[[b,0],[b+0.01,0.22],[b+0.075,0.001,"e"]]); n.connect(bp); bp.connect(g); g.connect(out); }
-    /* diesel engine: saw + square sub, distorted, low-passed; rpm curve revs, shifts, revs */
-    const eng=ctx.createGain(), sh=shaper(ctx,3), lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.Q.value=2.5;
-    const rpm=[[s+0.34,22],[s+0.5,34,"l"],[s+0.75,27,"l"],[s+1.55,74,"l"],[s+1.68,50,"l"],[s+2.85,98,"l"],[s+3.05,82,"l"],[s+3.25,44,"l"],[s+4.1,24,"l"],[s+7.2,23,"l"],[s+7.3,30,"l"]];
-    [["sawtooth",1,0.6],["square",0.5,0.45],["sawtooth",2.01,0.18]].forEach(([type,mul,lev])=>{ const v=ctx.createOscillator(); v.type=type; pts(v.frequency,rpm.map(([t,f,k])=>[t,f*mul,k])); const vg=ctx.createGain(); vg.gain.value=lev; v.connect(vg); vg.connect(sh); v.start(s+0.3); v.stop(s+7.5); });
-    /* firing-pulse throb: amplitude wobble at half the firing rate */
-    const am=ctx.createGain(); am.gain.value=0.75; const lfo=ctx.createOscillator(); lfo.type="triangle"; pts(lfo.frequency,rpm.map(([t,f,k])=>[t,f/2,k])); const lfoG=ctx.createGain(); lfoG.gain.value=0.25; lfo.connect(lfoG); lfoG.connect(am.gain); lfo.start(s+0.3); lfo.stop(s+7.5);
-    pts(lp.frequency,[[s+0.3,320],[s+0.75,360,"l"],[s+1.55,1100,"l"],[s+1.68,600,"l"],[s+2.85,1600,"l"],[s+3.25,700,"l"],[s+4.1,260,"l"]]);
-    sh.connect(lp); lp.connect(am); am.connect(eng); eng.connect(out);
-    pts(eng.gain,[[s+0.3,0],[s+0.36,0.42],[s+0.7,0.3,"l"],[s+1.55,0.46,"l"],[s+2.85,0.52,"l"],[s+3.1,0.22,"l"],[s+4.0,0.14,"l"],[s+4.6,0.1,"l"],[s+7.1,0.08,"l"],[s+7.4,0,"l"]]  /* low idle under the name reveal */);
-    /* jake brake: harsh staccato "brap" as the lanes streak by and the rig sheds speed */
-    const jo=ctx.createOscillator(); jo.type="sawtooth"; pts(jo.frequency,[[s+2.55,58],[s+3.0,52,"l"],[s+3.95,30,"l"]]);
-    const jsh=shaper(ctx,9), jbp=ctx.createBiquadFilter(); jbp.type="bandpass"; jbp.frequency.value=420; jbp.Q.value=0.9;
-    const jam=ctx.createGain(); jam.gain.value=0.5; const jl=ctx.createOscillator(); jl.type="square"; pts(jl.frequency,[[s+2.55,24],[s+3.95,12,"l"]]); const jlg=ctx.createGain(); jlg.gain.value=0.5; jl.connect(jlg); jlg.connect(jam.gain);
-    const jg=ctx.createGain(); pts(jg.gain,[[s+2.55,0],[s+2.75,0.16,"l"],[s+3.1,0.34,"l"],[s+3.7,0.26,"l"],[s+3.98,0,"l"]]);
-    jo.connect(jsh); jsh.connect(jbp); jbp.connect(jam); jam.connect(jg); jg.connect(out); jo.start(s+2.55); jo.stop(s+4); jl.start(s+2.55); jl.stop(s+4);
+    /* recorded semi pulling through the gears (rev, shift, rev) during the warp */
+    clips.push(clip(ctx,out,"rev",s+0.3,1.6));
+    /* recorded jake brake as the rig sheds speed */
+    clips.push(clip(ctx,out,"jake",s+2.3,1));
     /* warp whoosh: band-passed noise sweeping up with speed, panning, plus a sub rumble; boom at the flash */
     const wn=noise(ctx,nb,s,s+4.6), wbp=ctx.createBiquadFilter(); wbp.type="bandpass"; wbp.Q.value=0.9; pts(wbp.frequency,[[s,220],[s+1.2,420,"e"],[s+3.0,3200,"e"],[s+3.9,600,"e"]]);
     const wg=ctx.createGain(); pts(wg.gain,[[s,0],[s+0.6,0.02,"l"],[s+2.2,0.12,"l"],[s+3.02,0.55,"l"],[s+3.9,0.004,"e"]]);
@@ -943,13 +931,12 @@ function score(ctx,out,s,o){
     if (pan){ const pl=ctx.createOscillator(); pl.frequency.value=0.7; const plg=ctx.createGain(); plg.gain.value=0.35; pl.connect(plg); plg.connect(pan.pan); pl.start(s); pl.stop(s+4.6); wg.connect(pan); pan.connect(out); } else wg.connect(out);
     const rn=noise(ctx,nb,s,s+4.4), rlp=ctx.createBiquadFilter(); rlp.type="lowpass"; rlp.frequency.value=110; const rg=ctx.createGain(); pts(rg.gain,[[s,0],[s+1,0.25,"l"],[s+3.0,0.9,"l"],[s+4.3,0.001,"e"]]); rn.connect(rlp); rlp.connect(rg); rg.connect(out);
     const bo=ctx.createOscillator(); bo.type="sine"; pts(bo.frequency,[[s+3.03,95],[s+3.8,28,"e"]]); const bg=ctx.createGain(); pts(bg.gain,[[s+3.03,0],[s+3.05,0.75],[s+3.85,0.001,"e"]]); bo.connect(bg); bg.connect(out); bo.start(s+3.03); bo.stop(s+3.9);
-    /* air-brake hiss "pssshht" as the rig settles, just before the name reveal */
-    const hb=s+3.62, hn=noise(ctx,nb,hb,hb+0.9), hp=ctx.createBiquadFilter(); hp.type="highpass"; hp.frequency.value=2600; const hpk=ctx.createBiquadFilter(); hpk.type="peaking"; hpk.frequency.value=6000; hpk.gain.value=6;
-    const hg=ctx.createGain(); pts(hg.gain,[[hb,0],[hb+0.02,0.34],[hb+0.18,0.24,"l"],[hb+0.85,0.001,"e"]]); hn.connect(hp); hp.connect(hpk); hpk.connect(hg); hg.connect(out);
-    const cn=noise(ctx,nb,hb,hb+0.12), cbp=ctx.createBiquadFilter(); cbp.type="bandpass"; cbp.frequency.value=900; cbp.Q.value=1; const cg=ctx.createGain(); pts(cg.gain,[[hb,0.3],[hb+0.11,0.001,"e"]]); cn.connect(cbp); cbp.connect(cg); cg.connect(out);
+    /* recorded air-brake "pssht" as the truck stops, right before the logo locks; its hiss tail settles under the name */
+    clips.push(clip(ctx,out,"air",s+3.55,1.5));
   }
   thunk(ctx,out,s+o.lock,o.reduce?0.6:1);
-  if (o.horn!=null) horn(ctx,out,s+o.horn);
+  if (o.horn!=null) clips.push(horn(ctx,out,s+o.horn));
+  return Promise.all(clips);
 }
 const MUTE_KEY="pifl-intro-muted";
 let actx=null, master=null, scoreBus=null, muted=false;
@@ -958,7 +945,12 @@ const VOL=0.72;
 function audioStart(){
   const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
   try{
+    /* iOS 17+: play through the ringer/silent switch once the user has tapped "start your engine" */
+    try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){}
     actx=new AC(); actx.resume&&actx.resume();
+    /* iOS unlock: start a silent buffer inside the tap gesture */
+    try{ const ub=actx.createBufferSource(); ub.buffer=actx.createBuffer(1,1,22050); ub.connect(actx.destination); ub.start(0); }catch(e){}
+    Object.keys(SND).forEach(k=>getBuf(actx,k));
     const comp=actx.createDynamicsCompressor(); comp.threshold.value=-12; comp.ratio.value=8; comp.attack.value=0.003; comp.connect(actx.destination);
     master=actx.createGain(); master.gain.value=muted?0:VOL; master.connect(comp);
     scoreBus=actx.createGain(); scoreBus.connect(master);
@@ -979,7 +971,7 @@ async function renderWav(seconds){
   const sr=44100, oc=new OfflineAudioContext(2,Math.ceil(sr*seconds),sr);
   const comp=oc.createDynamicsCompressor(); comp.threshold.value=-12; comp.ratio.value=8; comp.attack.value=0.003; comp.connect(oc.destination);
   const m=oc.createGain(); m.gain.value=VOL; m.connect(comp);
-  score(oc,m,0.03,{reduce,lock:(T.lock||T.logo)/1000,horn:T.out/1000});
+  await score(oc,m,0.03,{reduce,lock:(T.lock||T.logo)/1000,horn:T.out/1000});
   const buf=await oc.startRendering(), L=buf.getChannelData(0), R=buf.getChannelData(1), n=L.length;
   const ab=new ArrayBuffer(44+n*4), dv=new DataView(ab); const w=(o,s)=>{for(let i=0;i<s.length;i++)dv.setUint8(o+i,s.charCodeAt(i))};
   w(0,"RIFF"); dv.setUint32(4,36+n*4,true); w(8,"WAVE"); w(12,"fmt "); dv.setUint32(16,16,true); dv.setUint16(20,1,true); dv.setUint16(22,2,true); dv.setUint32(24,sr,true); dv.setUint32(28,sr*4,true); dv.setUint16(32,4,true); dv.setUint16(34,16,true); w(36,"data"); dv.setUint32(40,n*4,true);
