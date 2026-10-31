@@ -110,6 +110,20 @@ flowchart LR
 
 The **Load Board** in the preview shows these five statuses as columns (stacked on a phone), with chips to show one status at a time and a trailer type filter.
 
+## Calendar
+
+The **Calendar** tab shows every pickup (**PU**) and drop-off (**DEL**) by day. It fills the screen and follows the trailer type filter.
+
+- **Month view:** a full-screen month with large day squares, weekday headers and the month name up top. Each square shows big PU and DEL counts. Tap or click a day to open its list of stops, sorted by time. Tap a stop to open the load.
+- **Week view:** seven tall day columns, each listing that day's pickups and drop-offs by time. On a phone the columns scroll sideways and open on today.
+- **Done tracking:**
+  - A pickup counts as done once its load is **Loaded / En Route** or later.
+  - A drop-off counts as done once its load is **Delivered**.
+  - When every stop on a day is done, the square turns light green with a **✓ Done** badge.
+  - A partly done day shows progress, e.g. **1/2**.
+  - A past day with unfinished stops stays white and gets a small **red dot**.
+- Use the Month/Week toggle, ‹ › and Today to move around.
+
 ## The two 30-day clocks
 
 **Carrier pay clock (what we owe the truck).** It starts on the day the signed BOL / documents come back from the truck, not the delivery date.
@@ -140,7 +154,7 @@ The spec was dictated by voice, so a few calls were made:
 | File | Purpose |
 |---|---|
 | `PIFL_Driver_Load_Tracker.xlsx` | The tracker: `Loads`, `Stops`, `Lists`, with dropdowns, formulas and red highlights. |
-| `index.html` | Static preview (GitHub Pages): Load Board, load detail, Accounting tab, trailer filter. No backend. |
+| `index.html` | Static preview (GitHub Pages): Load Board, full-screen Calendar (month/week), load detail, Accounting tab, trailer filter. No backend. |
 | `assets/` | Logo, shield crop and icons. Brand green `#427B2F`, silver `#AAABAE`, wordmark grey `#808182`. |
 | `favicon.ico` | Favicon from the shield. |
 | `README.md` | This file. |
