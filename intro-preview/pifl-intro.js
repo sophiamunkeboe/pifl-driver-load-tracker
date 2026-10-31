@@ -1,6 +1,8 @@
 /* PIFL warp intro (preview). Self-contained: canvas + CSS, no libraries, no files except the shield PNG.
    Modeled on the ICON | Kelso concept intro (starfield warp -> flash -> logo resolve -> fade), re-themed for trucking.
-   ?nointro skips it. Skip button / Esc skip it. prefers-reduced-motion gets a short, still fade. */
+   ?nointro skips it. Skip button / Esc skip it. prefers-reduced-motion gets a short, still fade.
+   Sound: 100% synthesized with Web Audio (no audio files). Browsers only allow audio after a user gesture,
+   so the intro opens on a "Tap to start your engine" gate; the 🔊 button mutes (remembered in localStorage). */
 (function(){
 const qs = new URLSearchParams(location.search);
 if (qs.has("nointro")) return;
@@ -67,7 +69,20 @@ body.pi-on{overflow:hidden}
 #pi-intro.reduce.name .pi-name span,#pi-intro.reduce.tag .pi-tag span{opacity:1}
 #pi-intro.reduce .pi-c{display:none}
 #pi-intro.reduce .pi-bar{transition:none!important}
-@media (max-width:640px){.pi-lockup{margin-bottom:10px}.pi-sub{letter-spacing:.18em}.pi-name{letter-spacing:.08em;font-size:clamp(17px,5.6vw,28px)}.pi-name span.sp{width:.35em}}
+.pi-gate{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:0 20px;text-align:center;background:radial-gradient(600px 400px at 50% 48%,rgba(5,9,6,.35),rgba(5,9,6,.78));transition:opacity .45s ease}
+.pi-gate.go{opacity:0;pointer-events:none}
+.pi-gate img{width:clamp(84px,14vh,130px);filter:drop-shadow(0 0 22px rgba(90,170,60,.55));opacity:.92}
+.pi-start{display:inline-flex;align-items:center;gap:12px;border:2px solid #6fbf4f;background:linear-gradient(180deg,#4f8f37,#356b24);color:#fff;border-radius:99px;padding:16px 30px;font:800 clamp(16px,2.4vw,21px) system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:0 0 0 0 rgba(111,191,79,.6),0 10px 30px rgba(0,0,0,.5);animation:piPulse 1.8s ease-out infinite}
+.pi-start:hover{background:linear-gradient(180deg,#5aa040,#3c7a29)}
+.pi-start:focus-visible{outline:3px solid #cfe9c2;outline-offset:4px}
+.pi-start{white-space:nowrap}.pi-start .k{display:grid;place-items:center;flex:none;width:40px;height:40px;border-radius:50%;background:#b3261e;border:2px solid #f0d0cc;font-size:8.5px;font-weight:800;letter-spacing:.04em;line-height:1;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)}
+@keyframes piPulse{0%{box-shadow:0 0 0 0 rgba(111,191,79,.55),0 10px 30px rgba(0,0,0,.5)}100%{box-shadow:0 0 0 22px rgba(111,191,79,0),0 10px 30px rgba(0,0,0,.5)}}
+.pi-gnote{font:500 12.5px system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:rgba(214,218,212,.7)}
+.pi-mute{position:absolute;top:max(14px,env(safe-area-inset-top));right:104px;z-index:5;width:38px;height:36px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:#eef2ec;border-radius:99px;font:16px system-ui,sans-serif;cursor:pointer;display:grid;place-items:center}
+.pi-mute:hover{background:rgba(255,255,255,.18)}
+.pi-mute:focus-visible{outline:2px solid #8fd16e;outline-offset:3px}
+#pi-intro.reduce .pi-start{animation:none}
+@media (max-width:640px){.pi-start{font-size:14px;letter-spacing:.02em;padding:12px 18px 12px 12px;gap:10px}.pi-mute{right:96px}.pi-lockup{margin-bottom:10px}.pi-sub{letter-spacing:.18em}.pi-name{letter-spacing:.08em;font-size:clamp(17px,5.6vw,28px)}.pi-name span.sp{width:.35em}}
 `;
 const st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
 
@@ -83,10 +98,12 @@ el.innerHTML = `<canvas aria-hidden="true"></canvas><div class="pi-flash"></div>
   <div class="pi-tag">${TAG.map((w,k)=>`<span style="animation-delay:${k*220}ms">${w}</span>`).join("")}</div>
   <div class="pi-sub">${SUB}</div>
 </div>
+<div class="pi-gate"><img src="${SHIELD}" alt=""><button type="button" class="pi-start"><span class="k">START</span>Tap to start your engine</button><div class="pi-gnote">Sound on · 8 seconds</div></div>
+<button type="button" class="pi-mute" aria-label="Mute intro sound" aria-pressed="false">🔊</button>
 <button type="button" class="pi-skip">Skip ›</button>`;
 
 /* ---------- canvas: starfield + highway warp + light trails ---------- */
-let W=0,H=0,cx=null,raf=0,t0=0,last=0,dist=0;
+let W=0,H=0,cx=null,raf=0,t0=0,last=0,dist=0,gated=true;
 const cv = () => el.querySelector("canvas");
 function size(){ const c=cv(), dpr=Math.min(2,window.devicePixelRatio||1); W=c.clientWidth; H=c.clientHeight; c.width=W*dpr; c.height=H*dpr; cx=c.getContext("2d"); cx.setTransform(dpr,0,0,dpr,0,0); }
 const stars = Array.from({length:380},()=>({x:Math.random()*2-1,y:-Math.random()*0.95-0.03,z:Math.random()*0.95+0.05}));
@@ -100,7 +117,7 @@ function speed(t){ /* road units per second */
 }
 function frame(now){
   if (!cx) return;
-  const t=(now-t0)/1000, dt=Math.min(0.05,(now-last)/1000||0.016); last=now;
+  const t=gated?0:(now-t0)/1000, dt=Math.min(0.05,(now-last)/1000||0.016); last=now;
   const v=speed(t); dist+=v*dt;
   const vx=W/2, vy=H*0.47, camH=1.6, f=Math.min(W,H)*0.95;
   const P=(lx,z)=>[vx+lx*f/z, vy+camH*f/z];
@@ -145,7 +162,7 @@ function frame(now){
     const [a,ay]=P(p.lane,z1),[b,by]=P(p.lane,z2);
     const g=cx.createLinearGradient(a,ay,b,by);
     const col=p.kind==="w"?"255,250,230":p.kind==="r"?"255,60,50":"120,215,90";
-    const alpha=Math.min(1,(t<0.3?t/0.3:1))*(p.kind==="g"?Math.min(1,v/60):1);
+    const alpha=(p.kind==="g"?Math.min(1,v/60):1);
     g.addColorStop(0,`rgba(${col},${alpha})`); g.addColorStop(1,`rgba(${col},0)`);
     cx.strokeStyle=g; cx.lineWidth=Math.max(1, 3.2*f/z1/90); cx.beginPath(); cx.moveTo(a,ay); cx.lineTo(b,by); cx.stroke();
   }
@@ -156,10 +173,107 @@ function frame(now){
   }
   raf=requestAnimationFrame(frame);
 }
-let timers=[], done=false;
+
+/* ---------- sound: every sound is synthesized with Web Audio ----------
+   score(ctx, out, s, o) schedules the whole soundtrack at ctx time s. It is pure scheduling,
+   so the same function drives live playback and an OfflineAudioContext render (used for the preview video). */
+function noiseBuf(ctx){ const n=ctx.sampleRate*2, b=ctx.createBuffer(1,n,ctx.sampleRate), d=b.getChannelData(0); for(let i=0;i<n;i++) d[i]=Math.random()*2-1; return b; }
+function shaper(ctx,k){ const n=2048,c=new Float32Array(n); for(let i=0;i<n;i++){const x=i/(n-1)*2-1; c[i]=Math.tanh(k*x)/Math.tanh(k);} const w=ctx.createWaveShaper(); w.curve=c; w.oversample="2x"; return w; }
+function noise(ctx,nb,s,e){ const n=ctx.createBufferSource(); n.buffer=nb; n.loop=true; n.start(s,Math.random()*1.5); n.stop(e); return n; }
+function pts(param,list){ list.forEach(([t,v,kind],i)=>{ if(i===0) param.setValueAtTime(v,t); else if(kind==="e") param.exponentialRampToValueAtTime(Math.max(v,1e-4),t); else if(kind==="s") param.setValueAtTime(v,t); else param.linearRampToValueAtTime(v,t); }); }
+function horn(ctx,out,t){ /* deep two-blast air horn: low A-major chord (A2 C#3 E3 + A1 body), each note 2 detuned saws */
+  const bus=ctx.createGain(); const lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.frequency.value=1500; lp.Q.value=0.8;
+  const pk=ctx.createBiquadFilter(); pk.type="peaking"; pk.frequency.value=420; pk.gain.value=5; pk.Q.value=1;
+  const sh=shaper(ctx,1.8); bus.connect(sh); sh.connect(lp); lp.connect(pk); pk.connect(out);
+  [[t,0.42],[t+0.58,0.95]].forEach(([b,dur])=>{
+    const g=ctx.createGain(); g.connect(bus); pts(g.gain,[[b,0],[b+0.035,0.19],[b+dur-0.09,0.175],[b+dur,0,"l"]]);
+    [55,110,138.59,164.81].forEach((f,j)=>[-5,5].forEach(cents=>{ const o=ctx.createOscillator(); o.type=j===0?"square":"sawtooth"; o.detune.value=cents;
+      pts(o.frequency,[[b,f*0.93],[b+0.07,f,"l"],[b+dur,f*0.99,"l"]]); const og=ctx.createGain(); og.gain.value=j===0?0.35:0.5; o.connect(og); og.connect(g); o.start(b); o.stop(b+dur+0.05); }));
+    /* air rush on each blast */
+    const n=noise(ctx,ctx._nb||(ctx._nb=noiseBuf(ctx)),b,b+dur); const bp=ctx.createBiquadFilter(); bp.type="bandpass"; bp.frequency.value=1800; bp.Q.value=0.7;
+    const ng=ctx.createGain(); pts(ng.gain,[[b,0],[b+0.03,0.05],[b+dur,0,"l"]]); n.connect(bp); bp.connect(ng); ng.connect(out);
+  });
+}
+function thunk(ctx,out,t,amt){ /* deep metallic lock-in */
+  const o=ctx.createOscillator(); o.type="sine"; pts(o.frequency,[[t,130],[t+0.22,40,"e"]]); const g=ctx.createGain(); pts(g.gain,[[t,0],[t+0.006,0.75*amt],[t+0.7,0.001,"e"]]); o.connect(g); g.connect(out); o.start(t); o.stop(t+0.75);
+  [[173,.7],[412,.45],[689,.35],[1031,.3],[1587,.18],[2390,.12]].forEach(([f,d],i)=>{ const p=ctx.createOscillator(); p.type="sine"; p.frequency.value=f; const pg=ctx.createGain(); pts(pg.gain,[[t,0],[t+0.004,(0.16-i*0.018)*amt],[t+d,0.0005,"e"]]); p.connect(pg); pg.connect(out); p.start(t); p.stop(t+d+0.05); });
+  const n=noise(ctx,ctx._nb,t,t+0.06), bp=ctx.createBiquadFilter(); bp.type="bandpass"; bp.frequency.value=2600; bp.Q.value=1.2; const ng=ctx.createGain(); pts(ng.gain,[[t,0.5*amt],[t+0.05,0.001,"e"]]); n.connect(bp); bp.connect(ng); ng.connect(out);
+}
+function score(ctx,out,s,o){
+  const nb=ctx._nb||(ctx._nb=noiseBuf(ctx));
+  if (!o.reduce){
+    /* key-start: starter motor cranks, then the diesel catches */
+    for (let i=0;i<4;i++){ const b=s+i*0.1, n=noise(ctx,nb,b,b+0.08), bp=ctx.createBiquadFilter(); bp.type="bandpass"; bp.frequency.value=520; bp.Q.value=2; const g=ctx.createGain(); pts(g.gain,[[b,0],[b+0.01,0.22],[b+0.075,0.001,"e"]]); n.connect(bp); bp.connect(g); g.connect(out); }
+    /* diesel engine: saw + square sub, distorted, low-passed; rpm curve revs, shifts, revs */
+    const eng=ctx.createGain(), sh=shaper(ctx,3), lp=ctx.createBiquadFilter(); lp.type="lowpass"; lp.Q.value=2.5;
+    const rpm=[[s+0.34,22],[s+0.5,34,"l"],[s+0.75,27,"l"],[s+1.55,74,"l"],[s+1.68,50,"l"],[s+2.85,98,"l"],[s+3.05,82,"l"],[s+3.25,44,"l"],[s+4.1,24,"l"],[s+7.2,23,"l"],[s+7.3,30,"l"]];
+    [["sawtooth",1,0.6],["square",0.5,0.45],["sawtooth",2.01,0.18]].forEach(([type,mul,lev])=>{ const v=ctx.createOscillator(); v.type=type; pts(v.frequency,rpm.map(([t,f,k])=>[t,f*mul,k])); const vg=ctx.createGain(); vg.gain.value=lev; v.connect(vg); vg.connect(sh); v.start(s+0.3); v.stop(s+7.5); });
+    /* firing-pulse throb: amplitude wobble at half the firing rate */
+    const am=ctx.createGain(); am.gain.value=0.75; const lfo=ctx.createOscillator(); lfo.type="triangle"; pts(lfo.frequency,rpm.map(([t,f,k])=>[t,f/2,k])); const lfoG=ctx.createGain(); lfoG.gain.value=0.25; lfo.connect(lfoG); lfoG.connect(am.gain); lfo.start(s+0.3); lfo.stop(s+7.5);
+    pts(lp.frequency,[[s+0.3,320],[s+0.75,360,"l"],[s+1.55,1100,"l"],[s+1.68,600,"l"],[s+2.85,1600,"l"],[s+3.25,700,"l"],[s+4.1,260,"l"]]);
+    sh.connect(lp); lp.connect(am); am.connect(eng); eng.connect(out);
+    pts(eng.gain,[[s+0.3,0],[s+0.36,0.42],[s+0.7,0.3,"l"],[s+1.55,0.46,"l"],[s+2.85,0.52,"l"],[s+3.1,0.22,"l"],[s+4.0,0.14,"l"],[s+4.6,0.1,"l"],[s+7.1,0.08,"l"],[s+7.4,0,"l"]]  /* low idle under the name reveal */);
+    /* jake brake: harsh staccato "brap" as the lanes streak by and the rig sheds speed */
+    const jo=ctx.createOscillator(); jo.type="sawtooth"; pts(jo.frequency,[[s+2.55,58],[s+3.0,52,"l"],[s+3.95,30,"l"]]);
+    const jsh=shaper(ctx,9), jbp=ctx.createBiquadFilter(); jbp.type="bandpass"; jbp.frequency.value=420; jbp.Q.value=0.9;
+    const jam=ctx.createGain(); jam.gain.value=0.5; const jl=ctx.createOscillator(); jl.type="square"; pts(jl.frequency,[[s+2.55,24],[s+3.95,12,"l"]]); const jlg=ctx.createGain(); jlg.gain.value=0.5; jl.connect(jlg); jlg.connect(jam.gain);
+    const jg=ctx.createGain(); pts(jg.gain,[[s+2.55,0],[s+2.75,0.16,"l"],[s+3.1,0.34,"l"],[s+3.7,0.26,"l"],[s+3.98,0,"l"]]);
+    jo.connect(jsh); jsh.connect(jbp); jbp.connect(jam); jam.connect(jg); jg.connect(out); jo.start(s+2.55); jo.stop(s+4); jl.start(s+2.55); jl.stop(s+4);
+    /* warp whoosh: band-passed noise sweeping up with speed, panning, plus a sub rumble; boom at the flash */
+    const wn=noise(ctx,nb,s,s+4.6), wbp=ctx.createBiquadFilter(); wbp.type="bandpass"; wbp.Q.value=0.9; pts(wbp.frequency,[[s,220],[s+1.2,420,"e"],[s+3.0,3200,"e"],[s+3.9,600,"e"]]);
+    const wg=ctx.createGain(); pts(wg.gain,[[s,0],[s+0.6,0.02,"l"],[s+2.2,0.12,"l"],[s+3.02,0.55,"l"],[s+3.9,0.004,"e"]]);
+    const pan=ctx.createStereoPanner?ctx.createStereoPanner():null; wn.connect(wbp); wbp.connect(wg);
+    if (pan){ const pl=ctx.createOscillator(); pl.frequency.value=0.7; const plg=ctx.createGain(); plg.gain.value=0.35; pl.connect(plg); plg.connect(pan.pan); pl.start(s); pl.stop(s+4.6); wg.connect(pan); pan.connect(out); } else wg.connect(out);
+    const rn=noise(ctx,nb,s,s+4.4), rlp=ctx.createBiquadFilter(); rlp.type="lowpass"; rlp.frequency.value=110; const rg=ctx.createGain(); pts(rg.gain,[[s,0],[s+1,0.25,"l"],[s+3.0,0.9,"l"],[s+4.3,0.001,"e"]]); rn.connect(rlp); rlp.connect(rg); rg.connect(out);
+    const bo=ctx.createOscillator(); bo.type="sine"; pts(bo.frequency,[[s+3.03,95],[s+3.8,28,"e"]]); const bg=ctx.createGain(); pts(bg.gain,[[s+3.03,0],[s+3.05,0.75],[s+3.85,0.001,"e"]]); bo.connect(bg); bg.connect(out); bo.start(s+3.03); bo.stop(s+3.9);
+    /* air-brake hiss "pssshht" as the rig settles, just before the name reveal */
+    const hb=s+3.62, hn=noise(ctx,nb,hb,hb+0.9), hp=ctx.createBiquadFilter(); hp.type="highpass"; hp.frequency.value=2600; const hpk=ctx.createBiquadFilter(); hpk.type="peaking"; hpk.frequency.value=6000; hpk.gain.value=6;
+    const hg=ctx.createGain(); pts(hg.gain,[[hb,0],[hb+0.02,0.34],[hb+0.18,0.24,"l"],[hb+0.85,0.001,"e"]]); hn.connect(hp); hp.connect(hpk); hpk.connect(hg); hg.connect(out);
+    const cn=noise(ctx,nb,hb,hb+0.12), cbp=ctx.createBiquadFilter(); cbp.type="bandpass"; cbp.frequency.value=900; cbp.Q.value=1; const cg=ctx.createGain(); pts(cg.gain,[[hb,0.3],[hb+0.11,0.001,"e"]]); cn.connect(cbp); cbp.connect(cg); cg.connect(out);
+  }
+  thunk(ctx,out,s+o.lock,o.reduce?0.6:1);
+  if (o.horn!=null) horn(ctx,out,s+o.horn);
+}
+const MUTE_KEY="pifl-intro-muted";
+let actx=null, master=null, scoreBus=null, muted=false;
+try{ muted=localStorage.getItem(MUTE_KEY)==="1"; }catch(e){}
+const VOL=0.72;
+function audioStart(){
+  const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+  try{
+    actx=new AC(); actx.resume&&actx.resume();
+    const comp=actx.createDynamicsCompressor(); comp.threshold.value=-12; comp.ratio.value=8; comp.attack.value=0.003; comp.connect(actx.destination);
+    master=actx.createGain(); master.gain.value=muted?0:VOL; master.connect(comp);
+    scoreBus=actx.createGain(); scoreBus.connect(master);
+    score(actx,scoreBus,actx.currentTime+0.03,{reduce,lock:(T.lock||T.logo)/1000,horn:T.out/1000});
+  }catch(e){ actx=null; }
+}
+function audioSkip(){ /* cut the soundtrack, still give the honk-honk into the dashboard */
+  if(!actx) return; const n=actx.currentTime; scoreBus.gain.setTargetAtTime(0,n,0.04);
+  horn(actx,master,n+0.05);
+}
+function audioEnd(){ if(actx){ const c=actx; setTimeout(()=>{ try{c.close()}catch(e){} },2600); } }
+function setMute(m){ muted=m; try{localStorage.setItem(MUTE_KEY,m?"1":"0")}catch(e){}
+  const b=el.querySelector(".pi-mute"); b.textContent=m?"🔇":"🔊"; b.setAttribute("aria-pressed",m?"true":"false"); b.setAttribute("aria-label",m?"Unmute intro sound":"Mute intro sound");
+  el.querySelector(".pi-gnote").textContent=(m?"Sound off":"Sound on")+" · 8 seconds";
+  if(master) master.gain.setTargetAtTime(m?0:VOL,actx.currentTime,0.03); }
+/* Offline render of the exact live soundtrack (for recording the preview video with audio). Returns a 16-bit stereo WAV as base64. */
+async function renderWav(seconds){
+  const sr=44100, oc=new OfflineAudioContext(2,Math.ceil(sr*seconds),sr);
+  const comp=oc.createDynamicsCompressor(); comp.threshold.value=-12; comp.ratio.value=8; comp.attack.value=0.003; comp.connect(oc.destination);
+  const m=oc.createGain(); m.gain.value=VOL; m.connect(comp);
+  score(oc,m,0.03,{reduce,lock:(T.lock||T.logo)/1000,horn:T.out/1000});
+  const buf=await oc.startRendering(), L=buf.getChannelData(0), R=buf.getChannelData(1), n=L.length;
+  const ab=new ArrayBuffer(44+n*4), dv=new DataView(ab); const w=(o,s)=>{for(let i=0;i<s.length;i++)dv.setUint8(o+i,s.charCodeAt(i))};
+  w(0,"RIFF"); dv.setUint32(4,36+n*4,true); w(8,"WAVE"); w(12,"fmt "); dv.setUint32(16,16,true); dv.setUint16(20,1,true); dv.setUint16(22,2,true); dv.setUint32(24,sr,true); dv.setUint32(28,sr*4,true); dv.setUint16(32,4,true); dv.setUint16(34,16,true); w(36,"data"); dv.setUint32(40,n*4,true);
+  for(let i=0;i<n;i++){ dv.setInt16(44+i*4,Math.max(-1,Math.min(1,L[i]))*32767,true); dv.setInt16(46+i*4,Math.max(-1,Math.min(1,R[i]))*32767,true); }
+  let bin=""; const u=new Uint8Array(ab); for(let i=0;i<u.length;i+=32768) bin+=String.fromCharCode.apply(null,u.subarray(i,i+32768)); return btoa(bin);
+}
+let timers=[], done=false, started=false;
 const at=(ms,fn)=>timers.push(setTimeout(fn,ms));
 function finish(skipped){
   if (done) return; done=true; timers.forEach(clearTimeout);
+  if (skipped && started) audioSkip(); audioEnd();
   el.classList.add("out"); document.removeEventListener("keydown",onKey);
   setTimeout(()=>{ cancelAnimationFrame(raf); el.remove(); document.body.classList.remove("pi-on"); window.dispatchEvent(new Event("pifl-intro-done")); }, skipped?300:800);
 }
@@ -167,9 +281,15 @@ function onKey(e){ if (e.key==="Escape"){ e.preventDefault(); finish(true); } }
 function start(){
   document.body.appendChild(el); document.body.classList.add("pi-on");
   el.querySelector(".pi-skip").addEventListener("click",()=>finish(true)); document.addEventListener("keydown",onKey);
-  el.querySelector(".pi-skip").focus({preventScroll:true});
+  el.querySelector(".pi-mute").addEventListener("click",()=>setMute(!muted)); setMute(muted);
+  const go=el.querySelector(".pi-start"); go.addEventListener("click",ignite,{once:true}); go.focus({preventScroll:true});
   size(); window.addEventListener("resize",size);
-  if (!reduce){ t0=last=performance.now(); raf=requestAnimationFrame(frame);
+  if (!reduce){ last=performance.now(); raf=requestAnimationFrame(frame); }  /* road idles behind the gate */
+}
+function ignite(){ /* the user gesture: unlock audio and run the timeline */
+  if (started||done) return; started=true; audioStart();
+  el.querySelector(".pi-gate").classList.add("go"); el.querySelector(".pi-skip").focus({preventScroll:true});
+  if (!reduce){ t0=last=performance.now(); gated=false;
     at(T.flash,()=>el.classList.add("flash","dim")); }
   at(T.logo,()=>el.classList.add("logo"));
   if (T.lock) at(T.lock,()=>el.classList.add("lock"));
@@ -178,6 +298,6 @@ function start(){
   at(T.sub,()=>el.classList.add("sub"));
   at(T.out,()=>finish(false));
 }
-window.PIFLIntro = { replay(){ location.search = ""; location.reload(); } };
+window.PIFLIntro = { replay(){ location.search = ""; location.reload(); }, start: ignite, renderWav, timeline: T };
 if (document.body) start(); else document.addEventListener("DOMContentLoaded", start);
 })();
