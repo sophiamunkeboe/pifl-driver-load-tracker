@@ -124,6 +124,52 @@ The **Calendar** tab shows every pickup (**PU**) and drop-off (**DEL**) by day. 
   - A past day with unfinished stops stays white and gets a small **red dot**.
 - Use the Month/Week toggle, ‹ › and Today to move around.
 
+## Board style: Old School Chris | New Look
+
+One switch in the header sets the look for the whole app, and the browser remembers it (`localStorage` key `pifl-look`).
+
+- **Old School Chris** turns the Load Board into a dense table modelled on the ITS Dispatch Board.
+  - Columns: Load #, W/O # (PO/BOL/unit), Driver/Carrier, Ship Date, Del Date, Customer, Origin, Destination.
+  - Rows are tinted by ITS status, with a legend: Pending, Open, Refused, Covered, Dispatched, On Route, (Un)Loading, In Yard.
+  - A load with no carrier shows a blue **Assign Later** link. Clicking a load # opens the load card.
+  - Sort by clicking a column header (default is Ship Date ▼). The **Find** box filters the rows, and "Show delivered" adds delivered loads.
+  - On a phone the table scrolls sideways.
+- **New Look** is the card board (columns by status).
+- In the Calendar, the day popup follows the same switch: Old School Chris shows the same table filtered to that day, and New Look shows the stop cards. The popup has its own copy of the switch.
+  - Until someone picks a look, a day with more than 8 loads opens as the table.
+  - Closing a load card opened from the table goes back to the table.
+
+How ITS status is derived:
+
+| ITS status | From |
+|---|---|
+| Open | Available, no carrier |
+| Covered | Available, carrier booked, pickup after today |
+| Dispatched | Available, carrier booked, pickup today or earlier |
+| (Un)Loading | Loading or Unloading |
+| On Route | Loaded / En Route |
+| Pending, Refused, In Yard | the optional `its` field on a load, used while the load is still in the matching status |
+
+## Map
+
+The 🗺️ Map tab is a full-screen map of live loads.
+
+- Each active load shows as a truck pin, colored by status and labelled with its load #. A red outline means hot.
+- A dashed road line runs from pickup to delivery, with **PU** and **DEL** markers.
+- Clicking a truck shows the driver, status, ETA, last update and an **Open load** button.
+- Status chips filter the map (Active by default).
+- The list is a sidebar on desktop and a bottom sheet on a phone. Tap the sheet header to resize it, and tap a row to fly to that truck.
+- **Demo · simulated GPS:**
+  - En Route trucks start where their schedule puts them and creep along the road every few seconds, with an "updated Xs ago" ping.
+  - ETA = remaining miles ÷ 52 mph.
+  - Driver first names are made up.
+- Stops carry `lat`/`lng`. Road lines were pre-computed once from OpenStreetMap data (OSRM demo router), simplified, and embedded in the page as `ROUTES`. Nothing is called at runtime except the map tiles.
+- Map: [Leaflet](https://leafletjs.com) 1.9.4 (BSD-2, in `assets/leaflet/`), tiles © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors. No API key.
+
+## Web demo sample loads
+
+The web demo has 16 more fictional sample loads (PIFL-1007 to PIFL-1022) on Southwest lanes, so the map, the dispatch board and a busy calendar day (tomorrow has 18 loads) have something to show. They exist only in `index.html`; the Excel tracker still has the original 6. All company names are made up. If a browser has an older saved demo, the new sample loads and coordinates are added the next time it loads.
+
 ## The two 30-day clocks
 
 **Carrier pay clock (what we owe the truck).** It starts on the day the signed BOL / documents come back from the truck, not the delivery date.
