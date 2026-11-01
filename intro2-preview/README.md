@@ -34,7 +34,12 @@ The page is the same dashboard as `intro-preview/` with a different intro in fro
 - **Highway shots:** AI-generated stills with the PIFL logo composited onto the truck. Shots 1 and 2 were animated with HeyGen image-to-video. Shot 3 is a Ken Burns move on the still because its HeyGen render failed.
 - **Chris clip** (`assets/chris-yall-test.mp4`): AI still of Chris (his likeness is used with his consent) animated with HeyGen image-to-video.
   - The voice is HeyGen TTS "Sage Sawyer". It is a stand-in stock voice, not Chris's real voice.
-  - Lip sync is approximate.
+  - Lip sync (Oct 31 update): HeyGen lip-sync and an Avatar IV re-render were both blocked by account limits (lip-sync credit quota 0, Avatar IV monthly limit). So the voice was re-timed to the existing mouth motion instead:
+    - a slower, drawled Sage take ("Y'aaall gonna love this!", speed 0.8)
+    - cut into three pieces and time-stretched with rubberband: "Y'all" ×0.81, "gonna love" ×1.15, "this" ×1.52, with "this" +9 dB
+    - "Y'all" starts when the mouth starts opening (clip 0.34 s, master 10.17 s), the "aw" sits on the widest-open frames (master about 10.63–10.77 s), and "this" ends as the lips close (master about 11.54 s)
+    - the ambient bed is unchanged
+  - The sync is close but still approximate. The image-to-video mouth motion is generic, not phoneme-accurate, and the mouth moves again briefly after the line ends.
 - **Narrator:** HeyGen TTS "Mysterious Michael - Broadcaster".
 - **Music:** an original score synthesized for this preview (drone, taiko, braam, risers). No third-party music is used.
   - pixabay.com blocked the box's requests, so no Pixabay music track could be downloaded.
