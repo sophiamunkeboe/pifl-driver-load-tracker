@@ -151,6 +151,11 @@ How ITS status is derived:
 | On Route | Loaded / En Route |
 | Pending, Refused, In Yard | the optional `its` field on a load, used while the load is still in the matching status |
 
+## Read aloud 🔊 and Sort
+
+- **🔊 Read aloud** is on every load card, every map popup ("Listen") and the calendar day popup ("Read list", which reads that day's list as shown, with the same filter and sort). It uses the browser's free built-in voice (`speechSynthesis`, no API key) and picks an en-US male voice when the device has one: Aaron, Nathan, Evan or Tom on iPhone and Mac, or Guy, Andrew or David on Windows and Edge. Otherwise it uses any en-US voice. Example: "PIFL 1008, hot load. Pick up Saturday in Los Angeles, deliver Sunday in Tucson. Driver Cody, en route, E-T-A 12:10 AM." Tap again (⏹ Stop) to stop. Speech starts inside the tap, which iPhone Safari requires. Long lists are queued sentence by sentence so Chrome does not cut them off. Closing the popup stops it. On iPhone the ring/silent switch can mute it.
+- **Sort: Date | Name** sits on the New Look board, the Old School board and the day popup. Date sorts by ship date for loads not yet picked up and by del date for loads en route, unloading or delivered. In the day popup, Pick-ups sort by ship time, Deliveries by del time, and All by the time of that day's stop. Name shows a **Customer A–Z / Carrier A–Z** picker (Customer by default; unassigned loads go last). Old School column headers are still clickable, and clicking Ship/Del Date, Customer or Driver/Carrier updates the control. The choice is shared and remembered (`pifl-sort`, `pifl-sortname`).
+
 ## Hot loads 🔥
 
 Hot loads (`hot: Yes`) get a 🔥 next to the load number everywhere: the Old School table, New Look cards, calendar day lists, map pins, map popups and list, and the load card header. Calendar day squares show a 🔥 count of the hot loads that day. A **🔥 Hot** chip filters the New Look board, the Old School board and the map.

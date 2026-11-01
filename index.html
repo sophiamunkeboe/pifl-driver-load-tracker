@@ -411,6 +411,22 @@ header .look .lrow{display:flex;align-items:center;gap:10px}
 .day .fire{font-size:.8rem;font-weight:700;color:#c00000;white-space:nowrap}
 .tpin .fl{font-size:11px;margin-right:-1px}
 @media(max-width:600px){header .look .lrow small{display:none}.psw{font-size:.68rem}}
+/* Read aloud + Sort control */
+.spk{display:inline-flex;align-items:center;gap:5px;border:1px solid #c9ced6;background:#fff;color:#2d3846;border-radius:999px;padding:5px 12px;font-size:.84rem;font-weight:600;cursor:pointer;white-space:nowrap;line-height:1.2;-webkit-tap-highlight-color:transparent}
+.spk.on{background:#2b6cb0;border-color:#2b6cb0;color:#fff}
+.lhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-right:34px;margin-bottom:2px}.lhead h2{margin:0}
+.mpop .mb{display:flex;gap:6px;margin-top:8px}.mpop .mb button{margin-top:0}
+.mpop .mb .spk{width:auto;flex:0 0 auto;background:#fff;color:#2d3846;border:1px solid #c9ced6;border-radius:8px;padding:8px 10px;font-size:13px}.mpop .mb .spk.on{background:#2b6cb0;border-color:#2b6cb0;color:#fff}
+.ssw{display:inline-flex;align-items:center;gap:6px;font-size:.85rem;color:#2d3846;flex-wrap:wrap}
+.ssw .sl{font-weight:600;color:var(--sd)}
+.ssw .seg{display:inline-flex;border:1px solid #c9ced6;border-radius:8px;overflow:hidden;background:#f4f6f8}
+.ssw .seg button{border:0;border-right:1px solid #c9ced6;background:transparent;padding:5px 12px;font-weight:600;font-size:.84rem;cursor:pointer;color:#2d3846}
+.ssw .seg button:last-child{border-right:0}.ssw .seg button.on{background:var(--g);color:#fff}
+.ssw select{font-size:.84rem;padding:4px 6px;border:1px solid #c9ced6;border-radius:8px;background:#fff;color:#2d3846}
+.drow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin:0 0 10px}.drow .dsw{margin:0}
+#nlSort{margin:0 0 8px}
+.its .ttl .ssw{font-size:.8rem}
+@media(max-width:600px){.ssw select{font-size:16px}.ssw .seg button{padding:7px 14px}}
 </style></head><body>
 <header><img src="assets/pifl-logo.jpg" alt="Pay It Forward Logistics, LLC" width="120" height="64"><div><h1>Load Tracker</h1><p>Load board, load details and the 30-day pay clocks · sample data only</p></div><div class="look"><div class="lrow"><small>Board style</small><button class="psw" id="pulseSw" role="switch" aria-checked="true" title="Animate the hot-load flames">🔥 Pulse <span class="tr"></span></button></div><span class="lsw" id="lookSw" role="group" aria-label="Board style"><button data-look="old">Old School Chris</button><button data-look="new">New Look</button></span></div></header>
 <nav><button id="tBoard" class="on"><span class="lg">Load </span>Board</button><button id="tCal">Calendar</button><button id="tMap">🗺️ Map</button><button id="tAcct">Accounting</button><button id="tMsg">Messages<span class="nbadge" id="tMsgN" hidden></span></button><button id="tDrv">🚛 Driver<span class="lg"> view</span></button></nav>
@@ -424,7 +440,7 @@ header .look .lrow{display:flex;align-items:center;gap:10px}
 <section id="vBoard">
  <div id="classic" hidden></div>
  <div id="newLook">
- <div class="chips" id="fStatus" style="margin-bottom:8px"></div>
+ <div class="chips" id="fStatus" style="margin-bottom:8px"></div><div id="nlSort"></div>
  <div class="flow">Status flow: Available → Loading → Loaded / En Route → Unloading → Delivered. Tap a load for details. <b style="color:#c00000">Red</b> = hot load.</div>
  <div class="board" id="board"></div>
  </div>
@@ -494,8 +510,8 @@ TRAILERS.forEach(t=>$("fTrailer").insertAdjacentHTML("beforeend",`<option>${t}</
 function chips(){const nh=visible().filter(l=>l.hot==="Yes").length;$("fStatus").innerHTML=["All",...STATUSES].map(s=>`<button class="chip ${(s==="All"?"":s)===fStat?"on":""}" data-s="${s==="All"?"":s}">${s}</button>`).join("")+`<button class="chip hotc ${fStat==="hot"?"on":""}" data-s="hot">${FLAME} Hot ${nh}</button>`;
  $("fStatus").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{fStat=b.dataset.s;draw()})}
 const visible=()=>LOADS.filter(l=>!$("fTrailer").value||l.trailer===$("fTrailer").value);
-function drawBoard(){const old=boardLook()==="old";$("classic").hidden=!old;$("newLook").hidden=old;lookSwUI();if(old){drawClassic();return}chips();const ls=visible().filter(l=>fStat!=="hot"||l.hot==="Yes");
- $("board").innerHTML=STATUSES.filter(s=>!fStat||fStat==="hot"||s===fStat).map(s=>{const g=ls.filter(l=>l.status===s);
+function drawBoard(){const old=boardLook()==="old";$("classic").hidden=!old;$("newLook").hidden=old;lookSwUI();if(old){drawClassic();return}chips();const ls=visible().filter(l=>fStat!=="hot"||l.hot==="Yes"),sp=sortKey();$("nlSort").innerHTML=sortHTML(sp);wireSort($("nlSort"),drawBoard);
+ $("board").innerHTML=STATUSES.filter(s=>!fStat||fStat==="hot"||s===fStat).map(s=>{const g=ls.filter(l=>l.status===s).sort(boardCmp(sp));
   return `<div class="col"><h2>${s}<span>${g.length}</span></h2>${g.map(card).join("")||'<div class="empty">No loads</div>'}</div>`}).join("");
  $("board").querySelectorAll(".card").forEach(c=>c.onclick=()=>detail(c.dataset.id));
  $("board").style.gridTemplateColumns=fStat?"1fr":""}
@@ -503,7 +519,7 @@ function card(l){const st=stopsOf(l.id),pu=st.find(s=>s.type==="Pickup"),rc=st.f
  return `<div class="card ${l.hot==="Yes"?"hot":""}" data-id="${l.id}"><div class="id">${l.hot==="Yes"?"<span class='fl'>🔥</span> ":""}${l.id}</div>
  <div class="cust">${esc(l.customer)} · Ref ${esc(l.ref)}</div>
  <div class="lane">${esc(pu?.city)} → ${rc.map(r=>esc(r.city)).join(" → ")}</div>
- <div class="lane" style="color:#5a6676">PU ${pu?fDT(pu.day,pu.time):"—"}</div>
+ <div class="lane" style="color:#5a6676">PU ${pu?fDT(pu.day,pu.time):"—"}</div>${sortKey()==="car"?`<div class="lane" style="color:#5a6676">Carrier: ${l.carrier?esc(ns(l.carrier)):"<i>Assign later</i>"}</div>`:""}
  <div class="meta"><span class="tag">${l.trailer}</span><span class="tag">${l.loadtype}</span><span class="tag">${l.miles} mi</span>${rc.length>1?`<span class="tag">${rc.length} drops</span>`:""}${l.hot==="Yes"?'<span class="tag hot">HOT</span>':""}${drvTags(l)}</div></div>`}
 function kv(k,v){return `<div class="kv"><b>${k}</b>${v}</div>`}
 function stopHTML(s,i){const pu=s.type==="Pickup";
@@ -518,7 +534,7 @@ function detail(id){openPanel(()=>renderDetail(id))}
 function renderDetail(id){const l=LOADS.find(x=>x.id===id),st=stopsOf(id),m=l.cust_rate-l.truck_rate;let ri=0;
  const cc=clock(l,"carrier"),cu=clock(l,"cust"),a=left(cc),b=left(cu);
  $("panel").className="panel "+(l.hot==="Yes"?"hot":"");
- $("panel").innerHTML=`<button class="x" aria-label="Close">×</button><h2>${l.hot==="Yes"?"<span class='fl'>🔥</span> ":""}${l.id}</h2>
+ $("panel").innerHTML=`<button class="x" aria-label="Close">×</button><div class="lhead"><h2>${l.hot==="Yes"?"<span class='fl'>🔥</span> ":""}${l.id}</h2>${spkBtn("load:"+l.id,"Read aloud")}</div>
  <div>${esc(l.customer)}</div>
  <div class="grid">${kv("Status",l.status)}${kv("Billing / Ref #",esc(l.ref))}${kv("Trailer",l.trailer)}${kv("Load type",l.loadtype)}${kv("Hot load",l.hot==="Yes"?'<b style="color:#c00000;font-size:1rem;text-transform:none">YES</b>':"No")}${kv("Miles",l.miles)}${kv("Carrier",esc(l.carrier)||"Not assigned")}</div>
  ${st.map(s=>stopHTML(s,s.type==="Receiver"?++ri:0)).join("")}
@@ -530,7 +546,7 @@ function renderDetail(id){const l=LOADS.find(x=>x.id===id),st=stopsOf(id),m=l.cu
 /* Panel stack: day list -> load detail. × / Esc / backdrop / phone back each step back one level,
    restoring the previous panel and its scroll position. Each open panel owns one history entry. */
 const pstack=[];
-function showTop(){const top=pstack[pstack.length-1];if(!top){$("ov").classList.remove("show");return}
+function showTop(){const top=pstack[pstack.length-1];if(!top){$("ov").classList.remove("show");if(TTS.key)stopSay();return}
  top.render();$("ov").classList.add("show");$("ov").scrollTop=top.scroll||0}
 function openPanel(render){if(pstack.length)pstack[pstack.length-1].scroll=$("ov").scrollTop;
  pstack.push({render,scroll:0});history.pushState({pifl:pstack.length},"");showTop()}
@@ -586,13 +602,13 @@ function drawCal(){const m=byDay(),c=$("cal");$("vM").classList.toggle("on",calV
   c.innerHTML=`<div class="wgrid">${g}</div>`;{const w=c.firstChild,t=w.querySelector(".wcol.today");if(t&&w.scrollWidth>w.clientWidth)w.scrollLeft=t.offsetLeft-w.offsetLeft-6}c.querySelectorAll(".ev").forEach(x=>x.onclick=()=>detail(x.dataset.id))}
  sizeCal()}
 function dayList(d,L){openPanel(()=>renderDayList(d,L))}
-function renderDayList(d,L){const s=dayState(L,d),ids=[...new Set(L.map(e=>e.load))],look=dayLook(ids.length);$("panel").className="panel"+(look==="old"?" wide":"");
+function renderDayList(d,L){DAYSAY={d,L};const s=dayState(L,d),ids=[...new Set(L.map(e=>e.load))],look=dayLook(ids.length);$("panel").className="panel"+(look==="old"?" wide":"");
  if(look==="old"){renderDayGrid(d,L,s,ids);return}
- const f=dayFilt(),S=daySets(L),EV=f==="all"?L:L.filter(e=>f==="pu"?e.pu:!e.pu);
- $("panel").innerHTML=`<button class="x" aria-label="Close">×</button><div class="dhead"><h2 style="margin:0">${d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})}</h2>${lookSwHTML("new")}</div>
+ const f=dayFilt(),S=daySets(L),EV=dayEvents(L),dk="day:"+d.toDateString();
+ $("panel").innerHTML=`<button class="x" aria-label="Close">×</button><div class="dhead"><h2 style="margin:0">${d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})}</h2>${spkBtn(dk,"Read list")}${lookSwHTML("new")}</div>
  <div style="color:var(--sd);margin-bottom:8px">${ids.length} load${ids.length===1?"":"s"} · ${s.pu} pickup${s.pu===1?"":"s"} · ${s.del} drop-off${s.del===1?"":"s"}${s.all?' · <b style="color:var(--g)">✓ Done</b>':s.n?` · ${s.dn}/${s.n} done`:""}${s.late?' · <b style="color:var(--red)">unfinished</b>':""}</div>
- ${dayFiltHTML(S,f)}${EV.map(evHTML).join("")||`<div class="wempty">No ${f==="pu"?"pick-ups":f==="del"?"deliveries":"pickups or drop-offs"} this day.</div>`}`;
- $("panel").querySelector(".x").onclick=close;$("panel").querySelectorAll(".ev").forEach(x=>x.onclick=()=>detail(x.dataset.id));wireLookSw($("panel"));wireDayFilt($("panel"))}
+ <div class="drow">${dayFiltHTML(S,f)}${sortHTML(sortKey())}</div>${EV.map(evHTML).join("")||`<div class="wempty">No ${f==="pu"?"pick-ups":f==="del"?"deliveries":"pickups or drop-offs"} this day.</div>`}`;
+ $("panel").querySelector(".x").onclick=close;$("panel").querySelectorAll(".ev").forEach(x=>x.onclick=()=>detail(x.dataset.id));wireLookSw($("panel"));wireDayFilt($("panel"));wireSort($("panel"),showTop)}
 function calMove(n){if(calView==="m")calCur=new Date(calCur.getFullYear(),calCur.getMonth()+n,1);else calCur.setDate(calCur.getDate()+7*n);drawCal()}
 $("cPrev").onclick=()=>calMove(-1);$("cNext").onclick=()=>calMove(1);$("cToday").onclick=()=>{calCur=new Date(T0);drawCal()};
 $("vM").onclick=()=>{calView="m";drawCal()};$("vW").onclick=()=>{calView="w";drawCal()};addEventListener("resize",sizeCal);
@@ -865,9 +881,9 @@ function itsRow(l){const st=stopsOf(l.id),pu=st.find(s=>s.type==="Pickup"),rc=st
  return {l,id:l.id,wo:l.wo||(pu?pu.po:""),car:ns(l.carrier),ship:pu?pu.day*1440+t2m(pu.time):0,del:last?last.day*1440+t2m(last.time):0,shipT:pu?isoD(pu.day):"",delT:last?isoD(last.day):"",
   cust:ns(l.customer),orig:pu?ns(pu.name)+" / "+pu.city:"",dest:last?ns(last.name)+" / "+last.city+(rc.length>1?` (+${rc.length-1} drop)`:""):"",its:itsStatus(l)}}
 const ITSCOLS=[["id","Load #"],["wo","W/O #"],["car","Driver/Carrier"],["ship","Ship Date"],["del","Del Date"],["cust","Customer"],["orig","Origin"],["dest","Destination"]];
-function itsRows(loads,st){const q=(st.q||"").trim().toLowerCase();let r=loads.map(itsRow);if(st.tags)r.forEach(x=>x.tag=st.tags[x.id]||"");
+function itsRows(loads,st){const q=(st.q||"").trim().toLowerCase();let r=loads.map(itsRow);if(st.tags)r.forEach(x=>x.tag=st.tags[x.id]||"");if(st.dayt)r.forEach(x=>x.dayt=st.dayt[x.id]||0);
  if(q)r=r.filter(x=>[x.tag||"",x.id,x.wo,x.car||"assign later",x.shipT,x.delT,x.cust,x.orig,x.dest,x.its,x.l.status].join(" ").toLowerCase().includes(q));
- const k=st.k,dir=st.dir;r.sort((a,b)=>{const va=a[k],vb=b[k];return (typeof va==="number"?va-vb:String(va).localeCompare(String(vb)))*dir||a.id.localeCompare(b.id)});return r}
+ const k=st.k,dir=st.dir;r.sort((a,b)=>{const va=a[k],vb=b[k];if(k==="car"&&(!va||!vb)&&va!==vb)return va?-1:1;return (typeof va==="number"?va-vb:String(va).localeCompare(String(vb)))*dir||(k==="cust"||k==="car"?a.ship-b.ship:0)||a.id.localeCompare(b.id)});return r}
 function itsBody(loads,st){const r=itsRows(loads,st);
  if(!r.length)return `<tr><td colspan="${st.tags?9:8}" class="none">No loads match “${esc(st.q)}”.</td></tr>`;
  return r.map(x=>`<tr style="background:${ITSC[x.its][0]}" title="${x.its}${x.l.hot==="Yes"?" · HOT":""}">${st.tags?`<td class="tg">${x.tag.split("+").map(t=>`<span class="${t.toLowerCase()}">${t}</span>`).join("")}</td>`:""}<td><a class="ln ${x.l.hot==="Yes"?"hot":""}" data-id="${x.id}">${x.l.hot==="Yes"?FLAME+" ":""}${x.id}</a></td><td>${esc(x.wo)}</td>
@@ -877,19 +893,94 @@ function itsLegend(){return `<div class="lgd">${ITS_LEGEND.map(k=>`<span><i styl
 /* Wire one ITS table: sort on header click, Find box filters rows, load # / Assign Later open our load card */
 function itsWire(root,getLoads,st){const tb=root.querySelector("tbody"),th=root.querySelector("thead");
  const body=()=>{tb.innerHTML=itsBody(getLoads(),st);tb.querySelectorAll("a[data-id]").forEach(a=>a.onclick=()=>detail(a.dataset.id))};
- const head=()=>{th.innerHTML=itsHead(st);th.querySelectorAll("th").forEach(h=>h.onclick=()=>{const k=h.dataset.k;st.dir=st.k===k?-st.dir:(k==="ship"||k==="del"?-1:1);st.k=k;head();body()})};
+ const head=()=>{th.innerHTML=itsHead(st);th.querySelectorAll("th").forEach(h=>h.onclick=()=>{const k=h.dataset.k;st.dir=st.k===k?-st.dir:(k==="ship"||k==="del"?-1:1);st.k=k;head();body();if(st.onHead)st.onHead(k)})};
  const f=root.querySelector(".find input");if(f){f.value=st.q||"";f.oninput=()=>{st.q=f.value;body()}}
  head();body()}
-const boardSt={k:"ship",dir:-1,q:"",dl:false,hot:false};
+/* ---------- Sort control: "Sort: Date | Name" (Name = Customer or Carrier A–Z). One remembered choice for both boards and the day popup ---------- */
+const SORTKEY="pifl-sort",SNKEY="pifl-sortname";
+const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+const sortName=()=>lsGet(SNKEY)==="car"?"car":"cust";
+const sortKey=()=>lsGet(SORTKEY)==="name"?sortName():"date";
+function setSortPref(p){if(p==="date")lsSet(SORTKEY,"date");else{lsSet(SORTKEY,"name");lsSet(SNKEY,p)}}
+const curOf=k=>k==="ship"||k==="del"||k==="dayt"?"date":k==="cust"||k==="car"?k:"";
+function sortHTML(cur){const nm=cur==="cust"||cur==="car",n=nm?cur:sortName();
+ return `<div class="ssw" role="group" aria-label="Sort"><span class="sl">Sort:</span><span class="seg"><button data-sort="date" class="${cur==="date"?"on":""}" aria-pressed="${cur==="date"}">Date</button><button data-sort="name" class="${nm?"on":""}" aria-pressed="${nm}">Name</button></span>${nm?`<select class="sname" aria-label="Sort names by"><option value="cust" ${n==="cust"?"selected":""}>Customer A–Z</option><option value="car" ${n==="car"?"selected":""}>Carrier A–Z</option></select>`:""}</div>`}
+function wireSort(root,redraw){const w=root.querySelector(".ssw");if(!w)return;
+ w.querySelectorAll("[data-sort]").forEach(b=>b.onclick=e=>{e.stopPropagation();setSortPref(b.dataset.sort==="date"?"date":sortName());redraw()});
+ const sel=w.querySelector(".sname");if(sel)sel.onchange=()=>{setSortPref(sel.value);redraw()}}
+function resortUI(root,cur,redraw){const w=root.querySelector(".ssw");if(w){w.outerHTML=sortHTML(cur);wireSort(root,redraw)}}
+const nameCmp=(a,b)=>(!a)-(!b)||String(a||"").localeCompare(String(b||""));
+const BYDEL=new Set(["Loaded / En Route","Unloading","Delivered"]);
+function boardCmp(p){return (a,b)=>{const A=itsRow(a),B=itsRow(b);
+ if(p==="date"){const k=BYDEL.has(a.status)?"del":"ship";return A[k]-B[k]||a.id.localeCompare(b.id)}
+ return nameCmp(A[p],B[p])||A.ship-B.ship||a.id.localeCompare(b.id)}}
+function applyBoardSort(){const p=sortKey();boardSt.k=p==="date"?"ship":p;boardSt.dir=p==="date"?-1:1}
+/* Header click on a Date / Customer / Carrier column also updates the remembered choice */
+function headPref(k){const p=curOf(k);if(p==="date")lsSet(SORTKEY,"date");else if(p)setSortPref(p);return p}
+
+/* ---------- Read aloud: the browser's free built-in voice (speechSynthesis), en-US male if the device has one ---------- */
+const canSpeak=typeof window!=="undefined"&&"speechSynthesis" in window&&"SpeechSynthesisUtterance" in window;
+const TTS={key:null,gen:0,voice:null};
+const MALE=["Aaron","Nathan","Evan","Tom","Alex","Microsoft Guy","Microsoft Andrew","Microsoft Christopher","Microsoft Eric","Microsoft Brian","Microsoft Davis","Microsoft Roger","Microsoft Steffan","Microsoft David","Microsoft Mark","Google US English Male","Reed","Eddy","Rocko","Ralph","Junior","Fred"];
+function pickVoice(){if(!canSpeak)return null;const vs=speechSynthesis.getVoices()||[];if(!vs.length)return null;
+ const us=vs.filter(v=>/^en[-_]US/i.test(v.lang));
+ for(const n of MALE){const v=us.find(v=>v.name===n||v.name.startsWith(n+" ")||v.name.startsWith(n+" ("));if(v)return v}
+ return us.find(v=>/\bmale\b/i.test(v.name)&&!/female/i.test(v.name))||us.find(v=>v.localService)||us[0]||vs.find(v=>/^en/i.test(v.lang))||null}
+if(canSpeak){TTS.voice=pickVoice();try{speechSynthesis.addEventListener("voiceschanged",()=>{TTS.voice=pickVoice()})}catch(e){speechSynthesis.onvoiceschanged=()=>{TTS.voice=pickVoice()}}}
+function spkBtn(key,label,cls=""){if(!canSpeak)return "";const on=TTS.key===key;
+ return `<button type="button" class="spk ${cls} ${on?"on":""}" data-say="${key}" data-l="${label}" aria-pressed="${on}" title="${on?"Stop reading":"Read aloud"}">${on?"⏹ Stop":"🔊 "+label}</button>`}
+function spkUI(){document.querySelectorAll(".spk[data-say]").forEach(b=>{const on=b.dataset.say===TTS.key;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on);b.title=on?"Stop reading":"Read aloud";b.textContent=on?"⏹ Stop":"🔊 "+b.dataset.l})}
+function stopSay(){if(!canSpeak)return;TTS.gen++;TTS.key=null;try{speechSynthesis.cancel()}catch(e){}spkUI()}
+/* Speak inside the tap itself (iPhone only allows speech that starts from a user gesture). Long text is queued sentence by sentence so Chrome does not cut it off after ~15 s. */
+function say(key,text){if(!canSpeak||!text)return;const ss=speechSynthesis;
+ if(TTS.key===key){stopSay();return}
+ if(ss.speaking||ss.pending)ss.cancel();
+ const gen=++TTS.gen;TTS.key=key;if(!TTS.voice)TTS.voice=pickVoice();
+ const parts=[];text.match(/[^.!?]+[.!?]*\s*/g).forEach(x=>{x=x.trim();if(!x)return;if(parts.length&&parts[parts.length-1].length+x.length<160)parts[parts.length-1]+=" "+x;else parts.push(x)});
+ parts.forEach((t,i)=>{const u=new SpeechSynthesisUtterance(t);if(TTS.voice){u.voice=TTS.voice;u.lang=TTS.voice.lang}else u.lang="en-US";u.rate=1;u.pitch=1;
+  if(i===parts.length-1)u.onend=()=>{if(TTS.gen===gen){TTS.key=null;spkUI()}};
+  u.onerror=ev=>{if(TTS.gen===gen&&ev.error!=="interrupted"&&ev.error!=="canceled"){TTS.key=null;spkUI()}};ss.speak(u)});
+ if(ss.paused)ss.resume();spkUI()}
+const idSay=id=>id.replace("-"," ");
+const tSay=t=>fmtT(t).replace(":00","");
+const wdSay=o=>{const d=dOff(o);return d?d.toLocaleDateString("en-US",{weekday:"long"}):""};
+const firstName=l=>l.carrier?drvName(l).split(" ")[0]:"";
+function statusSay(l){const i=itsStatus(l);if(i==="In Yard")return "in the yard";return {"Available":"available","Loading":"loading","Loaded / En Route":"en route","Unloading":"unloading","Delivered":"delivered"}[l.status]||l.status.toLowerCase()}
+function etaSay(l){const st=stopsOf(l.id),rc=st.filter(s=>s.type==="Receiver"),last=rc[rc.length-1];
+ if(moving(l)){const P=pathOf(l.id),left=Math.max(0,(1-progOf(l))*P.mi),t=new Date(Date.now()+left/52*36e5),now=new Date();
+  const tm=t.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"}).replace(":00","");return "E-T-A "+(t.toDateString()===now.toDateString()?"":t.toLocaleDateString("en-US",{weekday:"long"})+" ")+tm+"."}
+ if(itsStatus(l)==="In Yard")return "hooks at 2 AM.";
+ if(l.status==="Unloading")return "at the receiver now.";
+ if(l.status==="Delivered")return "";
+ return last?`delivery appointment ${wdSay(last.day)} ${tSay(last.time)}.`:""}
+function loadSay(l){if(!l)return "";const st=stopsOf(l.id),pu=st.find(s=>s.type==="Pickup"),rc=st.filter(s=>s.type==="Receiver");
+ const drops=rc.map((r,i)=>`${i?"then ":""}${wdSay(r.day)} in ${ST(r.city)}`).join(", ");
+ const who=l.carrier?`Driver ${firstName(l)}, ${statusSay(l)}`:`No driver yet, ${statusSay(l)}`,eta=etaSay(l);
+ return `${idSay(l.id)}${l.hot==="Yes"?", hot load":""}. ${pu?`Pick up ${wdSay(pu.day)} in ${ST(pu.city)}, `:""}deliver ${drops}. ${who}${eta?", "+eta:"."}`}
+/* Day popup: read the list as shown (same filter and sort) */
+let DAYSAY=null;
+function dayEvents(L){const f=dayFilt(),p=sortKey();let EV=f==="all"?L.slice():L.filter(e=>f==="pu"?e.pu:!e.pu);
+ if(p!=="date"){const R={};EV.forEach(e=>R[e.load]=R[e.load]||itsRow(e.l));EV.sort((a,b)=>nameCmp(R[a.load][p],R[b.load][p])||a.time.localeCompare(b.time)||a.load.localeCompare(b.load))}
+ else EV.sort((a,b)=>a.time.localeCompare(b.time)||a.load.localeCompare(b.load));return EV}
+function daySay(d,L){const f=dayFilt(),EV=dayEvents(L),S=daySets(L);
+ const head=d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})+". "+(f==="pu"?`${S.pu.size} pick-up${S.pu.size===1?"":"s"}.`:f==="del"?`${S.del.size} deliver${S.del.size===1?"y":"ies"}.`:`${S.all.length} load${S.all.length===1?"":"s"}: ${S.pu.size} pick-up${S.pu.size===1?"":"s"} and ${S.del.size} deliver${S.del.size===1?"y":"ies"}.`);
+ if(!EV.length)return head+" Nothing scheduled.";
+ return head+" "+EV.map(e=>`${idSay(e.load)}${e.l.hot==="Yes"?", hot":""}, ${ns(e.l.customer).replace(/\.$/,"")}. ${e.pu?"Pick up":"Deliver"} in ${ST(e.city)} at ${tSay(e.time)}, ${e.l.carrier?"driver "+firstName(e.l):"no driver yet"}.`).join(" ")}
+function sayText(k){if(k.startsWith("load:"))return loadSay(LOADS.find(l=>l.id===k.slice(5)));if(k.startsWith("day:")&&DAYSAY)return daySay(DAYSAY.d,DAYSAY.L);return ""}
+/* Capture phase so the tap never reaches the card / map underneath */
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest(".spk[data-say]");if(!b)return;e.preventDefault();e.stopPropagation();say(b.dataset.say,sayText(b.dataset.say))},true);
+
+const boardSt={k:"ship",dir:-1,q:"",dl:false,hot:false};applyBoardSort();
+boardSt.onHead=k=>{headPref(k);resortUI($("classic"),curOf(boardSt.k),()=>{applyBoardSort();drawClassic()})};
 function drawClassic(){const el=$("classic"),focus=document.activeElement&&document.activeElement.id==="itsFind";
  const loads=()=>visible().filter(l=>(boardSt.dl||l.status!=="Delivered")&&(!boardSt.hot||l.hot==="Yes"));
  const nh=visible().filter(l=>(boardSt.dl||l.status!=="Delivered")&&l.hot==="Yes").length;
- el.innerHTML=`<div class="its"><div class="ttl"><h2>Dispatch Board</h2><label class="dl"><input type="checkbox" id="itsDl" ${boardSt.dl?"checked":""}> Show delivered</label><button class="chip hotc ${boardSt.hot?"on":""}" id="itsHot" aria-pressed="${boardSt.hot}">${FLAME} Hot ${nh}</button>
+ el.innerHTML=`<div class="its"><div class="ttl"><h2>Dispatch Board</h2><label class="dl"><input type="checkbox" id="itsDl" ${boardSt.dl?"checked":""}> Show delivered</label><button class="chip hotc ${boardSt.hot?"on":""}" id="itsHot" aria-pressed="${boardSt.hot}">${FLAME} Hot ${nh}</button>${sortHTML(curOf(boardSt.k))}
  <label class="find">Find: <input id="itsFind" type="search" placeholder="Load, PO, carrier, city…" autocomplete="off"></label></div>
  <div class="btns"><span>New active load</span><span>New pending load</span><span class="r">Offered trucks</span></div>
  ${itsLegend()}<div class="tw"><table><thead></thead><tbody></tbody></table></div>
  <div class="foot">Old School Chris view: the ITS Dispatch-style board. Click a load # (or Assign Later) to open the load card. Click a column to sort. Sample data, fictional companies.</div></div>`;
- itsWire(el,loads,boardSt);$("itsDl").onchange=e=>{boardSt.dl=e.target.checked;drawClassic()};$("itsHot").onclick=()=>{boardSt.hot=!boardSt.hot;drawClassic()};if(focus){const f=$("itsFind");f.focus();f.setSelectionRange(f.value.length,f.value.length)}}
+ itsWire(el,loads,boardSt);wireSort(el,()=>{applyBoardSort();drawClassic()});$("itsDl").onchange=e=>{boardSt.dl=e.target.checked;drawClassic()};$("itsHot").onclick=()=>{boardSt.hot=!boardSt.hot;drawClassic()};if(focus){const f=$("itsFind");f.focus();f.setSelectionRange(f.value.length,f.value.length)}}
 /* Calendar day popup in Old School Chris style: same columns and row colors, only that day's loads */
 let dayGridSt={k:"ship",dir:1,q:""},dayGridKey="";
 /* Day popup filter: All | Pick-ups | Deliveries (remembered). Pick-ups = loads picking up this day (Ship Date); Deliveries = loads dropping off this day */
@@ -899,17 +990,21 @@ function daySets(L){const pu=new Set(),del=new Set();L.forEach(e=>(e.pu?pu:del).
 function dayFiltHTML(S,f){const b=(k,t,n)=>`<button data-df="${k}" class="${f===k?"on":""}" aria-pressed="${f===k}">${t} <span class="n">${n}</span></button>`;
  return `<div class="dsw" role="group" aria-label="Show">${b("all","All",S.all.length)}${b("pu","Pick-ups",S.pu.size)}${b("del","Deliveries",S.del.size)}</div>`}
 function wireDayFilt(root){root.querySelectorAll(".dsw button").forEach(x=>x.onclick=()=>{const v=x.dataset.df;try{localStorage.setItem(DFKEY,v)}catch(e){}
- dayGridSt.k=v==="del"?"del":"ship";dayGridSt.dir=1;showTop()})}
-function renderDayGrid(d,L,s,ids){const k=d.toDateString(),f=dayFilt(),S=daySets(L);if(dayGridKey!==k){dayGridKey=k;dayGridSt={k:f==="del"?"del":"ship",dir:1,q:""}}
+ dayGridApply(v);showTop()})}
+function dayGridApply(f){const p=sortKey();if(p==="date"){dayGridSt.k=f==="del"?"del":f==="pu"?"ship":"dayt";dayGridSt.dir=1}else{dayGridSt.k=p;dayGridSt.dir=1}}
+function renderDayGrid(d,L,s,ids){const k=d.toDateString(),f=dayFilt(),S=daySets(L);if(dayGridKey!==k){dayGridKey=k;dayGridSt={k:"ship",dir:1,q:""};dayGridApply(f)}
+ const dk="day:"+k,dt={};L.forEach(e=>{const m=t2m(e.time);if(dt[e.load]==null||m<dt[e.load])dt[e.load]=m});dayGridSt.dayt=dt;
+ if(f!=="all"&&dayGridSt.k==="dayt")dayGridApply(f);
+ dayGridSt.onHead=hk=>{headPref(hk);resortUI($("panel"),curOf(dayGridSt.k),()=>{dayGridApply(dayFilt());showTop()})};
  const show=f==="pu"?S.all.filter(id=>S.pu.has(id)):f==="del"?S.all.filter(id=>S.del.has(id)):S.all;
  if(f==="all"){const t={};S.all.forEach(id=>t[id]=[S.pu.has(id)?"PU":"",S.del.has(id)?"DEL":""].filter(Boolean).join("+"));dayGridSt.tags=t}else delete dayGridSt.tags;
  if(!dayGridSt.tags&&dayGridSt.k==="tag")dayGridSt.k=f==="del"?"del":"ship";
  const loads=()=>show.map(id=>LOADS.find(l=>l.id===id)).filter(Boolean);
- $("panel").innerHTML=`<button class="x" aria-label="Close">×</button><div class="dhead"><h2 style="margin:0">${d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})}</h2>${lookSwHTML("old")}</div>
+ $("panel").innerHTML=`<button class="x" aria-label="Close">×</button><div class="dhead"><h2 style="margin:0">${d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})}</h2>${spkBtn(dk,"Read list")}${lookSwHTML("old")}</div>
  <div style="color:var(--sd);margin-bottom:6px">${ids.length} load${ids.length===1?"":"s"} · ${s.pu} pickup${s.pu===1?"":"s"} · ${s.del} drop-off${s.del===1?"":"s"}${s.all?' · <b style="color:var(--g)">✓ Done</b>':s.n?` · ${s.dn}/${s.n} done`:""}${s.late?' · <b style="color:var(--red)">unfinished</b>':""}</div>
- ${dayFiltHTML(S,f)}<div class="its"><div class="ttl"><h2 style="font-size:1rem">${f==="pu"?"Pick-ups this day":f==="del"?"Deliveries this day":"Loads this day"}</h2><label class="find">Find: <input type="search" placeholder="Load, PO, carrier, city…" autocomplete="off"></label></div>${itsLegend()}
+ <div class="drow">${dayFiltHTML(S,f)}${sortHTML(curOf(dayGridSt.k))}</div><div class="its"><div class="ttl"><h2 style="font-size:1rem">${f==="pu"?"Pick-ups this day":f==="del"?"Deliveries this day":"Loads this day"}</h2><label class="find">Find: <input type="search" placeholder="Load, PO, carrier, city…" autocomplete="off"></label></div>${itsLegend()}
  <div class="tw"><table><thead></thead><tbody></tbody></table></div><div class="foot">Every load with a pickup or drop-off this day. Click a load # to open it; × on the load card comes back here.</div></div>`;
- itsWire($("panel"),loads,dayGridSt);$("panel").querySelector(".x").onclick=close;wireLookSw($("panel"));wireDayFilt($("panel"))}
+ itsWire($("panel"),loads,dayGridSt);$("panel").querySelector(".x").onclick=close;wireLookSw($("panel"));wireDayFilt($("panel"));wireSort($("panel"),()=>{dayGridApply(dayFilt());showTop()})}
 
 // ---------- Map room: live load map (Leaflet + OpenStreetMap tiles, no API key; simulated GPS) ----------
 const MSC={"Available":"#808182","Loading":"#d08a00","Loaded / En Route":"#427b2f","Unloading":"#2b6cb0","Delivered":"#5a6676"};
@@ -945,7 +1040,7 @@ function popHTML(l){const e=etaOf(l);return `<div class="mpop"><h4>${l.hot==="Ye
  <div class="r"><span>Driver</span><b>${esc(drvName(l))}${l.carrier?`<br><small style="font-weight:400;color:#5a6676">${esc(ns(l.carrier))}</small>`:""}</b></div>
  <div class="r"><span>Status</span><b><span class="st" style="background:${MSC[l.status]}">${MSHORT[l.status]||l.status}</span></b></div>
  <div class="r"><span>ETA</span><b>${e.main}<br><small style="font-weight:400;color:#5a6676">${e.sub}</small></b></div>
- <div class="r"><span>Last update</span><b data-ago="${l.id}">${ago(l.id)}</b></div><button class="mopen" data-id="${l.id}">Open load</button></div>`}
+ <div class="r"><span>Last update</span><b data-ago="${l.id}">${ago(l.id)}</b></div><div class="mb">${spkBtn("load:"+l.id,"Listen")}<button class="mopen" data-id="${l.id}">Open load</button></div></div>`}
 function pinIcon(l){return window.L.divIcon({className:"leaflet-div-icon nobg",iconSize:[0,0],html:`<div class="tpin ${l.hot==="Yes"?"hot":""} ${MAP.sel===l.id?"sel":""}" style="--c:${MSC[l.status]}">${TRUCK_SVG}${l.hot==="Yes"?FLAME:""}${l.id.replace("PIFL-","")}</div>`})}
 function stopIcon(pu,n){return window.L.divIcon({className:"leaflet-div-icon nobg",iconSize:[0,0],html:`<div class="spin ${pu?"pu":"del"}">${pu?"PU":"DEL"+(n?" "+n:"")}</div>`})}
 function loadLeaflet(cb){if(window.L&&window.L.map)return cb();if(loadLeaflet.p){loadLeaflet.p.push(cb);return}loadLeaflet.p=[cb];
