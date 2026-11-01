@@ -136,6 +136,7 @@ One switch in the header sets the look for the whole app, and the browser rememb
   - On a phone the table scrolls sideways.
 - **New Look** is the card board (columns by status).
 - In the Calendar, the day popup follows the same switch: Old School Chris shows the same table filtered to that day, and New Look shows the stop cards. The popup has its own copy of the switch.
+- The day popup has an **All | Pick-ups | Deliveries** toggle with a count on each. Pick-ups are loads with a pickup that day, sorted by ship date/time. Deliveries are loads with a drop-off that day, sorted by del date/time; a multi-drop load counts on each drop day. All is the union, and in the table it adds a PU/DEL tag column. The choice is remembered (`localStorage` key `pifl-dayfilter`).
   - Until someone picks a look, a day with more than 8 loads opens as the table.
   - Closing a load card opened from the table goes back to the table.
 
@@ -149,6 +150,12 @@ How ITS status is derived:
 | (Un)Loading | Loading or Unloading |
 | On Route | Loaded / En Route |
 | Pending, Refused, In Yard | the optional `its` field on a load, used while the load is still in the matching status |
+
+## Hot loads 🔥
+
+Hot loads (`hot: Yes`) get a 🔥 next to the load number everywhere: the Old School table, New Look cards, calendar day lists, map pins, map popups and list, and the load card header. Calendar day squares show a 🔥 count of the hot loads that day. A **🔥 Hot** chip filters the New Look board, the Old School board and the map.
+
+The small **🔥 Pulse** switch at the top right of the header turns the flame animation on or off. It is on by default and remembered (`pifl-pulse`). Flames stay still for anyone with "reduce motion" turned on.
 
 ## Map
 
